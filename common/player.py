@@ -1,4 +1,5 @@
 from vector import *
+from block import BlockType
 
 TILE_WIDTH = 32
 TILE_HEIGHT = 32
@@ -41,12 +42,15 @@ class Player:
 		self.currentDirection = Direction.Up
 		self.currentInteraction = Interaction.NoInteraction
 		self.currentInteractionBlockType = None
+                self.carrying = None
 
 	def interact(self, interaction, setInteracting):
 		if setInteracting:
 			if interaction == Interaction.Destroy:
 				self.currentInteraction = interaction
 			elif interaction == Interaction.Create:
+				self.currentInteraction = interaction
+			elif interaction == Interaction.PickUp:
 				self.currentInteraction = interaction
 		else:
 			self.currentInteraction = Interaction.NoInteraction
@@ -74,6 +78,12 @@ class Player:
 			#print block.type
 			pass
 
+        def interaction_pickup_block(self, dt, block):
+                self.carrying = block
+                block.oldType = block.type
+                block.type = 0
+                block.isDirty = 1
+
 	def updateInteraction(self, dt, block):
 		if not block:
 			self.currentInteractionBlockType = None
@@ -84,6 +94,10 @@ class Player:
 			
 			#if block.type == BlockType.Dirt:
 			self.interaction_destroy_dirt(dt, block)
+                if self.currentInteraction == Interaction.PickUp:
+                        self.currentInteractionBlockType = block.type
+                        if not self.carrying:
+                            self.interaction_pickup_block(dt, block)
 		else:
 			self.currentInteractionBlockType = None
 

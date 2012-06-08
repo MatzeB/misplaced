@@ -89,6 +89,10 @@ class Map:
 							block.isInteracting = True
 							block.isDirty = True
 
+			if player.currentInteraction == Interaction.PickUp:
+				block = self.getTargetBlock(self.blocks, player.position, player.currentDirection)
+				if block and block.type != 0:
+					player.updateInteraction(dt, block)
 
 	def generate(self):
 		for x in range(self.blocks_horizontal):
