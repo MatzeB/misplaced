@@ -79,10 +79,20 @@ class Player:
 			pass
 
         def interaction_pickup_block(self, dt, block):
-                self.carrying = block
-                block.oldType = block.type
-                block.type = 0
-                block.isDirty = 1
+                if self.carrying:
+                    print block.type
+                    if block.type == 0:
+                        block.type = self.carrying
+                        self.carrying = None
+                        block.isDirty = True
+                        self.isDirty = True
+                else:
+                    self.carrying = block.type
+                    block.type = 0
+                    block.isDirty = True
+                    self.isDirty = True
+                self.currentInteraction = Interaction.NoInteraction
+
 
 	def updateInteraction(self, dt, block):
 		if not block:
@@ -96,8 +106,7 @@ class Player:
 			self.interaction_destroy_dirt(dt, block)
                 if self.currentInteraction == Interaction.PickUp:
                         self.currentInteractionBlockType = block.type
-                        if not self.carrying:
-                            self.interaction_pickup_block(dt, block)
+                        self.interaction_pickup_block(dt, block)
 		else:
 			self.currentInteractionBlockType = None
 
