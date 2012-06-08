@@ -35,9 +35,13 @@ class MapVisualizer:
 			for y in range(self.map.blocks_vertical):
 				if (y * self.blockvisualizer.blockHeight) < self.currentOffset.y: continue
 				if (y * self.blockvisualizer.blockHeight) > self.currentOffset.y + self.screenDim.y: continue	
-				
-				self.blockvisualizer.draw(self.currentOffset, self.map.background[x][y])
-				self.blockvisualizer.draw(self.currentOffset, self.map.blocks[x][y])
+			
+				background_block = self.map.background[x][y]
+				if background_block.type != 0:
+					self.blockvisualizer.draw(self.currentOffset, background_block)
+				solid_block = self.map.blocks[x][y]
+				if solid_block.type != 0:
+					self.blockvisualizer.draw(self.currentOffset, solid_block)
 
 		for id,player in self.map.players.iteritems():
 			self.playervisualizer.draw(self.currentOffset, player)

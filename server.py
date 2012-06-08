@@ -10,7 +10,7 @@ HOST = ''
 PORT = 12345
 
 UPDATE_INTERVALL = 1.0/30.0
-SEND_INTERVALL = 1.0
+SEND_INTERVALL = 0.1
 
 mapname = "data/test.stl"
 mapdata = parse_map(open(mapname))
@@ -79,6 +79,7 @@ class Server:
 			newclient = self.s.accept()
 			if newclient != None:
 				(conn, addr) = newclient
+				conn.setblocking(0)
 				print "Connect by ", addr
 				client = Client(conn, addr)
 				client.id = str(len(self.clients))
@@ -192,6 +193,7 @@ if __name__ == "__main__":
 		client.player.move(Direction.Right, doit == "True")
 
 	def player_command_left(client, doit):
+		global server
 		client.player.move(Direction.Left, doit == "True")
 
 	def player_command_up(client, doit):
