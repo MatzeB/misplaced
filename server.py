@@ -156,7 +156,9 @@ if __name__ == "__main__":
 
 	def sendmap(client, text):
 		global server
-		server.send(client, "mapdata " + mapdata.serialize())
+		data = mapdata.serialize()
+		print "Sending map (%d bytes)" % len(data)
+		server.send(client, "mapdata " + data)
 
 	def changename(client, newname):
 		global server
@@ -167,7 +169,9 @@ if __name__ == "__main__":
 		client.player.visible = True
 
 		server.send(client, "welcome " + str(client.player.id))
-		server.send(client, "mapdata " + mapdata.serialize())
+		data = mapdata.serialize()
+		print "Sending map (%d bytes)" % len(data)
+		server.send(client, "mapdata " + data)
 
 	def abort(client, args):
 		global server
