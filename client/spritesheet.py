@@ -1,0 +1,2 @@
+class SpriteSheet:
+	pass
