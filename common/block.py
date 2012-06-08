@@ -10,9 +10,16 @@ class Block:
 	def __init__(self, x, y, t=BlockType.Dirt):
 		self.x = x
 		self.y = y
-		self.previousType = t
 		self.type = t
+		self.isInteracting = False
+		self.isBackground = False
+
+		# server properties
 		self.isDirty = False
+		
+		# client properties
+		self.previousType = t
+		self.interactionIndex = 0
 
 	def update(self, dt):
 		pass
@@ -31,12 +38,16 @@ class Block:
 
 	def setUpdateData(self, data, packetTime):
 		self.type = data.type
+		self.isInteracting = data.isInteracting
+		self.isBackground = data.isBackground
 
 	def serialize(self):
-		result = "[%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s]" % (
 			self.x,
 			self.y,
-			self.type
+			self.type,
+			self.isInteracting,
+			self.isBackground
 		)
 
 		return result
@@ -44,4 +55,7 @@ class Block:
 	@staticmethod
 	def deserialize(strdata):
 		parts = strdata[1:-1].split(",")
-		return Block(int(parts[0]), int(parts[1]), int(parts[2]))
+		result = Block(int(parts[0]), int(parts[1]), int(parts[2]))
+		result.isInteracting = parts[3] == "True"
+		result.isBackground = parts[4] == "True"
+		return result

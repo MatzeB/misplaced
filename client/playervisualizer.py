@@ -1,3 +1,4 @@
+from libs import pygl2d
 from visualizer import *
 from common.player import *
 
@@ -21,11 +22,22 @@ class PlayerVisualizer(Visualizer):
 		return 0
 
 	def getDirectionRotation(self, obj):
-		return direction2RoationMap[obj.currentDirection]
+		direction = obj.currentDirection
+		if direction == Direction.NoDir:
+			direction = obj.lastDirection
+		return direction2RoationMap[direction]
 	
 	def draw(self, offset, obj):
 		if obj.visible:
 			Visualizer.draw(self, offset, obj, rotation=self.getDirectionRotation(obj))
+
+			direction = obj.currentDirection
+			if direction == Direction.NoDir:
+				direction = obj.lastDirection
+			dirvector = direction_vectors[direction]
+			targetpos = obj.position + Vector(16,16) + dirvector * 16 + offset
+
+			pygl2d.draw.circle(targetpos.toIntArr(), 8, (255,0,0), 100)
 	
 	def clientUpdate(self, dt, obj):
 		Visualizer.clientUpdate(self, dt, obj)

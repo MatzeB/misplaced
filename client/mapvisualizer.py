@@ -29,12 +29,12 @@ class MapVisualizer:
 	def draw(self):
 		#print self.currentOffset
 		for x in range(self.map.blocks_horizontal):
-			if (x * self.blockvisualizer.blockWidth) < self.currentOffset.x: continue
-			if (x * self.blockvisualizer.blockWidth) > self.currentOffset.x + self.screenDim.x: continue
+			if (x * self.blockvisualizer.blockWidth) < -self.currentOffset.x - TILE_WIDTH/2: continue
+			if (x * self.blockvisualizer.blockWidth) > -self.currentOffset.x + self.screenDim.x + TILE_WIDTH/2: continue
 
 			for y in range(self.map.blocks_vertical):
-				if (y * self.blockvisualizer.blockHeight) < self.currentOffset.y: continue
-				if (y * self.blockvisualizer.blockHeight) > self.currentOffset.y + self.screenDim.y: continue	
+				if (y * self.blockvisualizer.blockHeight) < -self.currentOffset.y - TILE_HEIGHT/2: continue
+				if (y * self.blockvisualizer.blockHeight) > -self.currentOffset.y + self.screenDim.y + TILE_HEIGHT/2: continue	
 			
 				background_block = self.map.background[x][y]
 				if background_block.type != 0:
@@ -54,7 +54,7 @@ class MapVisualizer:
 		for id,player in self.map.players.iteritems():
 			self.playervisualizer.clientUpdate(dt, player)
 
-		#self.updateOffset(dt)
+		self.updateOffset(dt)
 
 	def findPlayer(self):
 		if self.map.players.has_key(self.playerid):
@@ -67,10 +67,10 @@ class MapVisualizer:
 
 		if player:
 			self.targetOffset = -(player.position - self.screenDim/2)
-			#print self.targetOffset
-			if self.targetOffset.x > 0: self.targetOffset.x = 0
-			if self.targetOffset.y > 0: self.targetOffset.y = 0
+			#if self.targetOffset.x > 0: self.targetOffset.x = 0
+			#if self.targetOffset.y > 0: self.targetOffset.y = 0
 			#if self.targetOffset.x < -self.map.width: self.targetOffset.x = 0
 			#if self.targetOffset.y > -self.map.height: self.targetOffset.y = 0
 
-			self.currentOffset = (self.targetOffset - self.currentOffset) * dt
+			#self.currentOffset = self.targetOffset
+			self.currentOffset += (self.targetOffset - self.currentOffset) * dt

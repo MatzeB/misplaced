@@ -24,6 +24,10 @@ class Map:
 
 		for x in range(self.blocks_horizontal):
 			for y in range(self.blocks_vertical):
+				if self.background[x][y].isDirty:
+					mapupdate.background.append(self.background[x][y])
+					self.background[x][y].isDirty = False
+
 				if self.blocks[x][y].isDirty:
 					mapupdate.blocks.append(self.blocks[x][y])
 					self.blocks[x][y].isDirty = False
@@ -35,7 +39,7 @@ class Map:
 
 		return mapupdate
 
-	def findNearestBlockAt(self, position):
+	def findNearestBlockAt(self, list, position):
 		result = None
 		
 		if position.x < 0 or position.x >= self.blocks_horizontal * TILE_WIDTH: return result
@@ -46,20 +50,19 @@ class Map:
 		iy = int(position.y/TILE_HEIGHT)
 		for x in range(ix, ix+1):
 			for y in range(iy, iy+1):
-				block = self.blocks[x][y]
+				block = list[x][y]
 				dist = Vector.distance(block.getCenterPosition(), position)
 				if minDist == -1 or dist < minDist:
 					result = block
 					minDist = dist
 
-
 		return result
 
-	def getTargetBlock(self, position, direction):
+	def getTargetBlock(self, list, position, direction):
 		dirvector = direction_vectors[direction]
-		targetpos = position + dirvector * 16
-		return self.findNearestBlockAt(targetpos)
+		targetpos = position + Vector(32,32) + dirvector * 16
 
+		return self.findNearestBlockAt(list, targetpos)
 
 	def update(self, dt):
 		for x in range(self.blocks_horizontal):
@@ -70,8 +73,22 @@ class Map:
 			player.update(dt)
 
 			if player.currentInteraction == Interaction.Destroy:
-				block = self.getTargetBlock(player.position, player.currentDirection)
-				player.updateInteraction(dt, block)
+				block = self.getTargetBlock(self.blocks, player.position, player.currentDirection)
+				
+				if block and block.type != 0:
+					player.updateInteraction(dt, block)
+					if not block.isInteracting:
+						block.isInteracting = True
+						block.isDirty = True
+				else:
+					block = self.getTargetBlock(self.background, player.position, player.currentDirection)
+					
+					if block:
+						player.updateInteraction(dt, block)
+						if not block.isInteracting:
+							block.isInteracting = True
+							block.isDirty = True
+
 
 	def generate(self):
 		for x in range(self.blocks_horizontal):
@@ -80,14 +97,17 @@ class Map:
 			for y in range(self.blocks_vertical):
 				self.blocks[x][y] = Block(x,y)
 				self.background[x][y] = Block(x,y)
+				self.background[x][y].isBackground = True
 
 	def addPlayer(self, player):
 		self.players[player.id] = player
 
 	def incrementalUpdate(self, data, packetTime):
-		# todo: interpolate
 		for block in data.blocks:
 			self.blocks[block.x][block.y].setUpdateData(block, packetTime)
+		
+		for block in data.background:
+			self.background[block.x][block.y].setUpdateData(block, packetTime)
 		
 		for player in data.players:
 			if self.players.has_key(player.id):
@@ -96,9 +116,6 @@ class Map:
 				self.players[player.id] = player
 
 	def serialize(self):
-		#data = pickle.dumps(self)
-		#result = base64.b64encode(data)
-
 		result = "["
 		result += str(self.blocks_horizontal)
 		result += "|"
@@ -124,9 +141,6 @@ class Map:
 
 	@staticmethod
 	def deserialize(strdata):
-		#data = base64.b64decode(strdata)
-		#return pickle.loads(data)
-
 		parts = strdata[1:-1].split("|")
 		strblocks_background = parts[2].split("/")
 		strblocks_blocks = parts[3].split("/")
@@ -152,12 +166,13 @@ class Map:
 		return result
 
 class MapUpdate:
-	def __init__(self, blocks=None, players=None):
+	def __init__(self, blocks=None, background=None, players=None):
 		self.blocks = blocks or []
+		self.background = background or []
 		self.players = players or []
 
 	def hasData(self):
-		return len(self.players) > 0 or len(self.blocks) > 0
+		return len(self.players) > 0 or len(self.blocks) > 0 or len(self.background) > 0
 
 	def serialize(self):
 		result = "["
@@ -166,29 +181,35 @@ class MapUpdate:
 			result += b.serialize() + "/"
 
 		result += "|"
+		
+		for b in self.background:
+			result += b.serialize() + "/"
+
+		result += "|"
 
 		for p in self.players:
 			result += p.serialize() + "/"
 
 		result += "]"
-		#data = pickle.dumps(self)
-		#result = base64.b64encode(data)
+
 		return result
 
 	@staticmethod
 	def deserialize(strdata):
-		#data = base64.b64decode(strdata)
-		#return pickle.loads(data)
-
 		result = MapUpdate()
 
 		parts = strdata[1:-1].split("|")
 		strblocks = parts[0].split("/")
-		strplayers = parts[1].split("/")
+		strbackground = parts[1].split("/")
+		strplayers = parts[2].split("/")
 
 		for b in strblocks:
 			if len(b.strip()) > 0:
 				result.blocks.append(Block.deserialize(b))
+
+		for b in strbackground:
+			if len(b.strip()) > 0:
+				result.background.append(Block.deserialize(b))
 		
 		for p in strplayers:
 			if len(p.strip()) > 0:

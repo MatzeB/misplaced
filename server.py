@@ -102,6 +102,8 @@ class Server:
 					continue
 				data = client.partialdata + data
 			except socket.error as e:
+				if e.errno == 10054:
+					self._drop_client(client)
 				continue
 
 			commandlines = data.split("\n")
@@ -185,6 +187,8 @@ if __name__ == "__main__":
 		client.player = player
 
 	def left(client):
+		print "player " + client.id + " left"
+
 		player = client.player
 		if mapdata.players.has_key(player.id):
 			del mapdata.players[player.id]

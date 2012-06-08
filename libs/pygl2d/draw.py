@@ -96,6 +96,7 @@ def rect(rectstyle, color, width=0, alpha=255.0):
 def circle(pos, radius, color, alpha=255.0):
     """Draw a circle <- return None
     """
+    win_size = window.get_size()
     
     w, x, y = color
     w = w / 255.0 if w else 0
@@ -107,7 +108,7 @@ def circle(pos, radius, color, alpha=255.0):
     c = gluNewQuadric()
     glColor4f(w, x, y, z)
     glPushMatrix()
-    glTranslatef(pos[0], pos[1], 0)
+    glTranslatef(pos[0], win_size[1] - pos[1], 0)
     gluDisk(c, 0, radius, 100, 100)
     glPopMatrix()
     glEnable(GL_TEXTURE_2D)

@@ -147,7 +147,7 @@ class Image:
         
         self.rotation = rotation
     
-    def colorize(self, r, g, b, a):
+    def colorize(self, (r, g, b), a=255):
         """Color an image on a RGBA (0-255) scale. <- return None
         """
         
@@ -175,7 +175,7 @@ class Image:
         """Draw the image to a certain position <- return None
         """
         if not rotation: rotation = self.rotation
-        
+
         glPushMatrix()
         #print pos[0]+self.ox, self.win_size[1] - pos[1] - self.oy
         glTranslatef(pos[0]+self.ox, self.win_size[1] - pos[1] - self.oy, 0)

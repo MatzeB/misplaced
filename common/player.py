@@ -35,7 +35,8 @@ class Player:
 		self.position = Vector(0,0)
 		self.velocity = Vector(0,0)
 		self.acceleration = Vector(0,0)
-		self.movementAcceleration = 200
+		self.movementAcceleration = 100
+		self.lastDirection = Direction.Up
 		self.currentDirection = Direction.Up
 		self.currentInteraction = Interaction.NoInteraction
 		self.currentInteractionBlockType = None
@@ -56,13 +57,21 @@ class Player:
 			accel *= -1
 
 		self.acceleration += direction_vectors[direction] * accel
-		self.currentDirection = direction
+
+		if self.currentDirection == Direction.NoDir:
+			self.lastDirection = self.currentDirection
+			self.currentDirection = direction
+
+		if self.acceleration.getLength() == 0:
+			self.lastDirection = self.currentDirection
+			self.currentDirection = Direction.NoDir
 
 		self.isDirty = True
 
 	def interaction_destroy_dirt(self, dt, block):
 		if self.isOnClient:
-			print block.type
+			#print block.type
+			pass
 
 	def updateInteraction(self, dt, block):
 		if not block:
@@ -83,7 +92,17 @@ class Player:
 			self.position += self.velocity * dt
 			self.velocity *= 0.1
 
+			if self.velocity.getLength() < 0.001:
+				self.velocity = Vector(0,0)
+
 			self.velocity.clamp(200)
+
+			if self.position.x < 0:
+				self.position.x = 0
+				self.velocity.x *= -1
+			if self.position.y < 0:
+				self.position.y = 0
+				self.velocity.y *= -1
 
 			self.isDirty = True
 
@@ -101,13 +120,14 @@ class Player:
 		self.velocity = data.velocity
 		self.acceleration = data.acceleration
 		self.movementAcceleration = data.movementAcceleration
+		self.lastDirection = data.lastDirection
 		self.currentDirection = data.currentDirection
 		self.currentInteraction = data.currentInteraction
 		self.currentInteractionBlockType = data.currentInteractionBlockType
 
 
 	def serialize(self):
-		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
 			self.id,
 			self.name,
 			self.visible,
@@ -115,6 +135,7 @@ class Player:
 			self.velocity.serialize(),
 			self.acceleration.serialize(),
 			self.movementAcceleration,
+			self.lastDirection,
 			self.currentDirection,
 			self.currentInteraction,
 			self.currentInteractionBlockType
@@ -135,11 +156,10 @@ class Player:
 		result.velocity = Vector.deserialize(parts[4])
 		result.acceleration = Vector.deserialize(parts[5])
 		result.movementAcceleration = float(parts[6])
-		result.currentDirection = int(parts[7])
-		result.currentInteraction = int(parts[8])
-		if parts[9] == "None":
-			result.currentInteractionBlockType = None
-		else:
-			result.currentInteractionBlockType = int(parts[9])
+		result.lastDirection = int(parts[7])
+		result.currentDirection = int(parts[8])
+		result.currentInteraction = int(parts[9])
+		if parts[10] == "None": result.currentInteractionBlockType = None
+		else: result.currentInteractionBlockType = int(parts[10])
 
 		return result
