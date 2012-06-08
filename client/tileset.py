@@ -12,21 +12,22 @@ class Tile:
 		self.rotation = rotation
 
 	def draw(self, pos, rotation=0):
-		if not self.image:
-			return
 		self.image.rotate(rotation)
 		self.image.draw_part(pos, (self.left, self.top, self.right, self.bottom))
 
 # Initialize tileset
 def make_tileset(filename, n_horizontal, n_vertical):
 	image = Image(filename)
+	image.ox = 0
+	image.oy = 0
 	tileset = []
-	tileset.append(Tile(None, (0,0,0,0)))
 	TILE_W = 32
 	TILE_H = 32
-	for y in range(n_vertical):
-		for x in range(n_horizontal):
-			tile = Tile(image, (x*TILE_W, y*TILE_H, (x+1)*TILE_W, (y+1)*TILE_H))
-			tileset.append(tile)
+	for s in range(4):
+		for y in range(n_vertical):
+				for x in range(n_horizontal/4):
+					xp = s*4+x
+					tile = Tile(image, (xp*TILE_W, y*TILE_H, (xp+1)*TILE_W, (y+1)*TILE_H))
+					tileset.append(tile)
 
 	return tileset

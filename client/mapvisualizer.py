@@ -10,7 +10,7 @@ class MapVisualizer:
 		self.playerid = playerid
 		self.screenDim = screenDim
 
-		self.tileset = make_tileset("data/forest.png", 9, 11)
+		self.tileset = make_tileset("data/tiles.png", 16, 16)
 		self.blockvisualizer = BlockVisualizer(self.tileset)
 		self.playervisualizer = PlayerVisualizer([
 			"client/graphics/player_0.png",
