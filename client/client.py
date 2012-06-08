@@ -69,7 +69,11 @@ class Client:
 
 	def send(self, command, argument=""):
 		print "Send command '%s'" % command
-		self.s.sendall("%s %s\n" % (command, argument))
+		try:
+			self.s.sendall("%s %s\n" % (command, argument))
+		except:
+			print "Server failed?"
+			self.connected = False
 
 if __name__ == "__main__":
 	# Example commandline test client
