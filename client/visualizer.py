@@ -4,11 +4,11 @@ from common.vector import *
 
 class Visualizer:
 
-	def __init__(self, graphicfiles=[]):
-		self.graphicfiles = graphicfiles
+	def __init__(self, graphicfiles=None):
+		self.graphicfiles = graphicfiles or []
 		self.graphics = []
 
-		for strfile in graphicfiles:
+		for strfile in self.graphicfiles:
 			self.graphics.append(pygl2d.image.Image(strfile))
 
 	def getPosition(self, obj):
@@ -24,11 +24,11 @@ class Visualizer:
 		else:
 			return self.graphics[key]
 
-	def draw(self, offset, obj):
+	def draw(self, offset, obj, rotation=0):
 		p = self.getPosition(obj)
 		graphic = self.getGraphic(obj)
 		if graphic:
-			graphic.draw((p + offset).toIntArr())
+			graphic.draw((p + offset).toIntArr(), rotation)
 	
 	def clientUpdate(self, dt, obj):
 		pass

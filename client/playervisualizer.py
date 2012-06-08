@@ -1,4 +1,13 @@
 from visualizer import *
+from common.player import *
+
+direction2RoationMap = {
+	Direction.NoDir: 0,
+	Direction.Left: 90,
+	Direction.Right: 270,
+	Direction.Up: 0,
+	Direction.Down: 180
+}
 
 class PlayerVisualizer(Visualizer):
 
@@ -10,10 +19,13 @@ class PlayerVisualizer(Visualizer):
 
 	def getGraphicsKey(self, obj):
 		return 0
+
+	def getDirectionRotation(self, obj):
+		return direction2RoationMap[obj.currentDirection]
 	
 	def draw(self, offset, obj):
 		if obj.visible:
-			Visualizer.draw(self, offset, obj)
+			Visualizer.draw(self, offset, obj, rotation=self.getDirectionRotation(obj))
 	
 	def clientUpdate(self, dt, obj):
 		Visualizer.clientUpdate(self, dt, obj)

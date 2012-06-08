@@ -1,0 +1,110 @@
+Misplaced
+-------------
+
+PvP!!!!!
+Setting: x Spieler sind auf einer einsamen Insel gestrandet. Sie müssen Aufgaben lösen, um zu überleben. Dabei gibt es kein direktes gut und böse, aber die Aktionen wirken sich aufeinander aus.
+
+===========
+Aufgaben
+===========
+
+Hausbau / Verteidigungswall
+---------------------------
+Was treibt die Spieler zum Hausbau? 
+- Nachts kommen Monster (Minecraft ftw), die können nicht durch den Schutzwall
+  --> Tür aber kein crafting: Schutzwall "abbauen", reinlaufen, aufbauen
+- Tagsüber verbrennen Monster, keine Waffen notwendig (fürs erste?)
+
+
+Monster
+---------------------------
+Wenn Spieler attakiert wird, verliert er leben
+Spieler kann sich mit Fäusten verteidigen, ggf. Monster erlegen --> + Lebensfreude
+
+
+Nahrungmittel besorgen
+---------------------------
+Hunger-Balken. Nimmt bei jedem Spieler kontinuierlich ab. Wenn bei 0, dann tot(?)
+Nahrungsquellen:
+	- Beeren pflücken
+	- Gemüse ernten
+	- Tiere jagen (Mit Händen!)
+
+=============
+Healthbars	
+=============	
+	Gesundheit			-> Wenn 0, dann tot
+	Lebensfreude		-> Wenn 0, dann Selbstmord
+	Hunger/Sättingung	-> Wenn 0, dann verhungert
+	Attribut Gewicht: Je mehr essen, desto höher -> Bei Kill wirft der Spieler entsprechend mehr oder weniger Fleisch ab 
+	--> ggf. kurze Übergangszeit, um Spieler zu retten
+	
+=============
+Handicaps / Rollen der Spieler
+=============
+
+Generell:
++ Hunger, mit jedem "Tick"
+- Hunger, wenn essen. Fleisch zählt stärker gegen Hunger
++ Gesundheit bei Gemüse/Obst essen
+
+
+Essen, wenn kein Hunger: -Health
+
+=============
+Abbau von Ressourcen
+=============
+
+Dauer je nach Ressource
+Holzhacken < Steine klopfen, etc.
+
+=============
+Rollen
+=============
+
+Der Umweltschützer
+-------------------
+- Lebensfreude, wenn Baum gefällt wird
++ Lebensfreude, wenn Stein statt Holz verbaut wird
+
+Der Vegetarier
+-------------------
+Kann kein Fleisch essen, Gesundheitsbonus bei Gemüse/Obst
+- Lebensfreude, wenn Tier getötet wird
++ Lebensfreude wenn in der Nähe von Natur (Baum, Strauch,...)
+
+Der Faulenzer
+-------------------
+- Lebensfreude bei jeder Aktion
++ Lebensfreude mit jedem "Tick", in dem nichts gemacht wird.
+
+Das Kellerkind
+-------------------
+- Lebensfreude bei Helligkeit (bei Aktivität) (bzw. ab späterem Morgen bis früher Abend) | Problem. Hier fehlt noch richtige Motivation
++ Lebensfreude in der Nacht. Weniger Hunger + erhöhte Gesundheit in der Nacht            |
+
+Der Allergiker
+-------------------
+- Lebensfreude wenn in der Nähe von Natur (Holz/Busch/...)
++ Lebensfreude in der Nähe von Steinen
+
+Dunkle Hautfarbe aka Sonnenanbeter
+-------------------
+- Lebensfreude bei Schatten (nur Tag)
++ Lebensfreude bei Sonne (nur Tag)
+
+Schatten = umliegende Felder =! Baum, Strauch,...
+
+Helle Hautfarbe
+-------------------
+- Lebensfreude bei Sonne (nur Tag)
++ Lebensfreude bei Schatten (nur Tag)
+
+Übergewicht
+-------------------
+ggf. nicht. siehe Gewicht
+
+Pazifist
+-------------------
+- Lebensfreude bei Angriff PvP
++ Lebensfreude bei Frieden (bzw. wenn Angreifer durch ihn angegriffen wird)??

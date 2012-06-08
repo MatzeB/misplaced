@@ -10,6 +10,7 @@ HOST = ''
 PORT = 12345
 
 UPDATE_INTERVALL = 1.0/30.0
+SEND_INTERVALL = 0.1
 
 mapname = "data/test.stl"
 mapdata = parse_map(open(mapname))
@@ -80,6 +81,7 @@ class Server:
 				(conn, addr) = newclient
 				print "Connect by ", addr
 				client = Client(conn, addr)
+				client.id = len(self.clients)
 				self.clients.append(client)
 				if hasattr(self, "joined"):
 					method = getattr(self, "joined")
@@ -137,6 +139,8 @@ if __name__ == "__main__":
 
 	def gameupdate(server, dt):
 		mapdata.update(dt)
+
+	def sendgameupdate(server):
 		mapupdate = mapdata.getMapUpdate()
 
 		if mapupdate.hasData():
@@ -171,7 +175,7 @@ if __name__ == "__main__":
 		server.sendall("abort")
 
 	def joined(client):
-		player = Player(repr(client.addr) + " " + str(randint(0,100)), randint(0,mapdata.width), randint(0,mapdata.height))
+		player = Player(str(client.id), randint(0,mapdata.width), randint(0,mapdata.height))
 		mapdata.addPlayer(player)
 		client.player = player
 
@@ -187,13 +191,17 @@ if __name__ == "__main__":
 		client.player.move(Direction.Left, doit == "True")
 
 	def player_command_up(client, doit):
-		client.player.move(Direction.Down, doit == "True")
+		client.player.move(Direction.Up, doit == "True")
 
 	def player_command_down(client, doit):
 		client.player.move(Direction.Down, doit == "True")
 
 	def player_command_attack(client, doit):
 		pass # todo
+
+	def ping(client, number):
+		global server
+		server.send(client, "pong " + str(number))
 
 	server.say = say
 	server.sendmap = sendmap
@@ -206,12 +214,21 @@ if __name__ == "__main__":
 	server.player_command_up = player_command_up
 	server.player_command_down = player_command_down
 	server.player_command_attack = player_command_attack
+	server.ping = ping
 
-	lastUpdateTime = time.clock()
+	t = time.clock()
+	lastUpdateTime = t
+	lastSendTime = t
 	while True:
 		server.process_network()
 
-		dt = time.clock() - lastUpdateTime
+		t = time.clock()
+		dt = t - lastUpdateTime
 		if dt > UPDATE_INTERVALL:
 			gameupdate(server, dt)
-			lastUpdateTime = time.clock()
+			lastUpdateTime = t
+
+		dt = t - lastSendTime
+		if dt > SEND_INTERVALL:
+			sendgameupdate(server)
+			lastSendTime = t

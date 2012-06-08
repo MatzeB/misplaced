@@ -8,9 +8,13 @@ class Tile:
 		self.right = right
 		self.bottom = bottom
 
-	def draw(self, pos):
+	def rotate(self, rotation):
+		self.rotation = rotation
+
+	def draw(self, pos, rotation=0):
 		if not self.image:
 			return
+		self.image.rotate(rotation)
 		self.image.draw_part(pos, (self.left, self.top, self.right, self.bottom))
 
 # Initialize tileset

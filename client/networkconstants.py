@@ -1,5 +1,6 @@
 
 class NetworkCommand:
+	Ping = "ping"
 	Name = "changename"
 	SendMap = "sendmap"
 	Player_Command_Left = "player_command_left"

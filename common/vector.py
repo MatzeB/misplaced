@@ -47,6 +47,15 @@ class Vector:
 		if len(self) != 0:
 			return self / self.getLength()
 		else: return Vector(0,0)
+
+	def clamp(self, max): 
+		l = self.getLength()
+		if l > 0:
+			norm = self/l
+			if l > max:
+				newV = norm * max
+				self.x = newV.x
+				self.y = newV.y
 	
 	def __add__(self, other):
 		if isinstance(other, Vector):
@@ -226,10 +235,10 @@ class Vector:
 	
 	def __str__(self): return "[x: %(x)f, y: %(y)f]" % self
 	def __repr__(self): return "{'x': %(x)f, 'y': %(y)f}" % self
-	def serialize(self): return "[%(x)f,%(y)f]" % self
+	def serialize(self): return "[%(x)f#%(y)f]" % self
 
 	@staticmethod
 	def deserialize(strdata):
-		parts = strdata[1:-1].split(",")
-		return Vector(int(parts[0]), int(parts[1]))
+		parts = strdata[1:-1].split("#")
+		return Vector(float(parts[0]), float(parts[1]))
 		

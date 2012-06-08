@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import pygame, os, sys
+import pygame, os, sys, time
 
 from libs import pygl2d
 
@@ -12,6 +12,8 @@ from client.client import *
 from client.networkconstants import *
 from mapparse import parse_map
 
+PING_INTERVALL = 3.0
+
 class Main:
 	def __init__(self, hostname):
 		self.screen = None
@@ -20,7 +22,12 @@ class Main:
 		self.running = False
 		self.showFPS = True
 
+		self.packetTime = 1/30.0
+		self.lastPingTime = time.clock()
+		self.lastPongTime = time.clock()
+
 		self.playername = "Player_" + str(int(100 * random()))
+		self.playerid = None
 		
 		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced")
 
@@ -33,12 +40,26 @@ class Main:
 
 		self.networkClient.mapdata = self.mapUpdate
 		self.networkClient.mapdataupdate = self.mapDataUpdate
+		self.networkClient.welcome = self.welcomeMessage
+		self.networkClient.pong = self.pong
 
 		self.map = None
 
 	# ====================================================================================================
 	# =======================           Network                      =====================================
 	# ====================================================================================================
+
+	def sendPing(self):
+		self.lastPingTime = time.clock()
+		self.networkClient.send(NetworkCommand.Ping, self.lastPingTime)
+
+	def pong(self, number):
+		t = time.clock()
+		self.packetTime = t - self.lastPingTime
+		self.lastPongTime = t
+
+	def welcomeMessage(self, id):
+		self.playerid = id
 
 	def mapUpdate(self, strmapdata):
 		# Assume the server just sent us a filename
@@ -52,12 +73,20 @@ class Main:
 	def mapDataUpdate(self, strmapupdate):
 		mapupdate = MapUpdate.deserialize(strmapupdate)
 		if self.map:
-			self.map.setUpdateData(mapupdate)
+			self.map.setUpdateData(mapupdate, self.packetTime)
 	
 
 	# ====================================================================================================
 	# =======================           Inputs                       =====================================
 	# ====================================================================================================
+
+	def player_interact(self, interaction, doit):
+		if self.map and self.map.map.players.has_key(self.playerid):
+			self.map.map.players[self.playerid].interact(interaction, doit)
+
+	def movePlayer(self, direction, doit):
+		if self.map and self.map.map.players.has_key(self.playerid):
+			self.map.map.players[self.playerid].move(direction, doit)
 
 	def poll(self):
 		events = pygame.event.get()
@@ -68,14 +97,20 @@ class Main:
 
 				if e.key == pygame.K_LEFT or e.key == pygame.K_a:
 					self.networkClient.send(NetworkCommand.Player_Command_Left, True)
+					self.movePlayer(Direction.Left, True)
 				elif e.key == pygame.K_RIGHT or e.key == pygame.K_d:
 					self.networkClient.send(NetworkCommand.Player_Command_Right, True)
+					self.movePlayer(Direction.Right, True)
 				elif e.key == pygame.K_UP or e.key == pygame.K_w:
 					self.networkClient.send(NetworkCommand.Player_Command_Up, True)
+					self.movePlayer(Direction.Up, True)
 				elif e.key == pygame.K_DOWN or e.key == pygame.K_s:
 					self.networkClient.send(NetworkCommand.Player_Command_Down, True)
+					self.movePlayer(Direction.Down, True)
 				elif e.key == pygame.K_SPACE:
 					self.networkClient.send(NetworkCommand.Player_Command_Attack, True)
+					self.player_interact(Interaction.Destroy, True)
+
 			
 			elif e.type == pygame.KEYUP:
 				if e.key == pygame.K_ESCAPE:
@@ -83,14 +118,19 @@ class Main:
 
 				elif e.key == pygame.K_LEFT or e.key == pygame.K_a:
 					self.networkClient.send(NetworkCommand.Player_Command_Left, False)
+					self.movePlayer(Direction.Left, False)
 				elif e.key == pygame.K_RIGHT or e.key == pygame.K_d:
 					self.networkClient.send(NetworkCommand.Player_Command_Right, False)
+					self.movePlayer(Direction.Right, False)
 				elif e.key == pygame.K_UP or e.key == pygame.K_w:
 					self.networkClient.send(NetworkCommand.Player_Command_Up, False)
+					self.movePlayer(Direction.Up, False)
 				elif e.key == pygame.K_DOWN or e.key == pygame.K_s:
 					self.networkClient.send(NetworkCommand.Player_Command_Down, False)
+					self.movePlayer(Direction.Down, False)
 				elif e.key == pygame.K_SPACE:
 					self.networkClient.send(NetworkCommand.Player_Command_Attack, False)
+					self.player_interact(Interaction.Destroy, True)
 
 	
 
@@ -117,11 +157,11 @@ class Main:
 		self.running = True
 		clock = pygame.time.Clock()
 		while self.running:
-			dt = clock.tick(40) / 1000.0
+			dt = clock.tick(30) / 1000.0
 
 			if self.showFPS and self.map:
 				fps = clock.get_fps()
-				print "FPS:",fps
+				#print "FPS:",fps
 				#fps_display = pygl2d.font.RenderText(str(int(fps)), [0, 0, 0], self.font)
 				#fps_display.draw([10, 10])
 
@@ -131,6 +171,9 @@ class Main:
 			
 			self.update(dt)
 			self.draw()
+
+			if (time.clock() - self.lastPongTime) > PING_INTERVALL:
+				self.sendPing()
 
 if __name__ == '__main__':
 	hostname = "localhost"

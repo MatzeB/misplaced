@@ -1,5 +1,6 @@
 import pickle, base64
 from block import *
+from player import *
 
 class Map:
 	def __init__(self, blocks_horizontal, blocks_vertical):
@@ -10,6 +11,10 @@ class Map:
 		self.blocks_horizontal = blocks_horizontal
 		self.height = blocks_vertical * 32
 		self.blocks_vertical = blocks_vertical
+
+		self.blocks = {}
+		for x in range(self.blocks_horizontal):
+			self.blocks[x] = {}
 
 	def getMapUpdate(self):
 		mapupdate = MapUpdate()
@@ -36,42 +41,79 @@ class Map:
 		for id,player in self.players.iteritems():
 			player.update(dt)
 
+			if player.currentInteraction == Interaction.Destroy:
+				block = self.getTargetBlock(player.position, player.currentDirection)
+
 	def generate(self):
 		for x in range(self.blocks_horizontal):
 			self.blocks[x] = {}
 			for y in range(self.blocks_vertical):
 				self.blocks[x][y] = Block(x,y)
 
-		self.blocks[2][5].type = BlockType.Gras
-
 	def addPlayer(self, player):
 		self.players[player.id] = player
 
-	def incrementalUpdate(self, data):
+	def incrementalUpdate(self, data, packetTime):
 		# todo: interpolate
 		for block in data.blocks:
-			self.blocks[block.x][block.y].setUpdateData(block)
+			self.blocks[block.x][block.y].setUpdateData(block, packetTime)
 		
 		for player in data.players:
 			if self.players.has_key(player.id):
-				self.players[player.id].setUpdateData(player)
+				self.players[player.id].setUpdateData(player, packetTime)
 			else:
 				self.players[player.id] = player
 
 	def serialize(self):
-		data = pickle.dumps(self)
-		result = base64.b64encode(data)
+		#data = pickle.dumps(self)
+		#result = base64.b64encode(data)
+
+		result = "["
+		result += str(self.blocks_horizontal)
+		result += "|"
+		result += str(self.blocks_vertical)
+		result += "|"
+
+		for x in range(self.blocks_horizontal):
+			for y in range(self.blocks_vertical):
+				result += self.blocks[x][y].serialize() + "/"
+
+		result += "|"
+
+		for id,player in self.players.iteritems():
+			result += player.serialize() + "/"
+		
+		result += "]"
+
 		return result
 
 	@staticmethod
 	def deserialize(strdata):
-		data = base64.b64decode(strdata)
-		return pickle.loads(data)
+		#data = base64.b64decode(strdata)
+		#return pickle.loads(data)
+
+		parts = strdata[1:-1].split("|")
+		strblocks = parts[2].split("/")
+		strplayers = parts[3].split("/")
+		
+		result = Map(int(parts[0]), int(parts[1]))
+
+		for b in strblocks:
+			if len(b.strip()) > 0:
+				block = Block.deserialize(b)
+				result.blocks[block.x][block.y] = block
+		
+		for p in strplayers:
+			if len(p.strip()) > 0:
+				player = Player.deserialize(p)
+				result.players[player.id] = player
+
+		return result
 
 class MapUpdate:
-	def __init__(self, blocks=[], players=[]):
-		self.blocks = blocks
-		self.players = players
+	def __init__(self, blocks=None, players=None):
+		self.blocks = blocks or []
+		self.players = players or []
 
 	def hasData(self):
 		return len(self.players) > 0 or len(self.blocks) > 0

@@ -23,11 +23,11 @@ class MapVisualizer:
 	def setData(self, mapdata):
 		self.map = mapdata # todo: interpolate
 
-	def setUpdateData(self, mapupdate):
-		self.map.incrementalUpdate(mapupdate)
+	def setUpdateData(self, mapupdate, pakettime):
+		self.map.incrementalUpdate(mapupdate, pakettime)
 
 	def draw(self):
-		print self.currentOffset
+		#print self.currentOffset
 		for x in range(self.map.blocks_horizontal):
 			if (x * self.blockvisualizer.blockWidth) < self.currentOffset.x: continue
 			if (x * self.blockvisualizer.blockWidth) > self.currentOffset.x + self.screenDim.x: continue

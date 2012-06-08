@@ -30,6 +30,9 @@ class Client:
 	
 	def mapdataupdate(self, mapupdate):
 		pass # to be overwritten
+	
+	def pong(self, number):
+		pass # to be overwritten
 
 	def process_updates(self):
 		if not self.connected: return

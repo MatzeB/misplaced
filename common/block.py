@@ -8,21 +8,24 @@ class Block:
 	def __init__(self, x, y, t=BlockType.Dirt):
 		self.x = x
 		self.y = y
-		self.previousType = BlockType.Dirt
+		self.previousType = t
 		self.type = t
 		self.isDirty = False
 
 	def update(self, dt):
-		if self.type != self.previousType:
-			self.previousType = self.type
-			self.isDirty = True
+		pass
+		#if self.type != self.previousType:
+			#print self.type, self.previousType
+			#self.previousType = self.type
+			#self.isDirty = True
+
+		#	print "block change"
 
 	def clientUpdate(self, dt):
 		pass
 
-	def setUpdateData(self, data):
+	def setUpdateData(self, data, packetTime):
 		self.type = data.type
-
 
 	def serialize(self):
 		result = "[%s,%s,%s]" % (

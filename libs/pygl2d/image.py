@@ -171,14 +171,16 @@ class Image:
         
         return rect.Rect(0, 0, self.get_width(), self.get_height())
         
-    def draw(self, pos):
+    def draw(self, pos, rotation=None):
         """Draw the image to a certain position <- return None
         """
+        if not rotation: rotation = self.rotation
+        
         glPushMatrix()
         #print pos[0]+self.ox, self.win_size[1] - pos[1] - self.oy
         glTranslatef(pos[0]+self.ox, self.win_size[1] - pos[1] - self.oy, 0)
         glColor4f(*self.color)
-        glRotatef(self.rotation, 0, 0, 1)
+        glRotatef(rotation, 0, 0, 1)
         glScalef(self.scalar, self.scalar, self.scalar)
         glCallList(self.dl)
         glPopMatrix()

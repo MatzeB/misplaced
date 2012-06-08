@@ -11,7 +11,8 @@ class BlockVisualizer(Visualizer):
 	def getPosition(self, obj):
 		x = obj.x * self.blockWidth
 		y = obj.y * self.blockHeight
-		return Vector(x,y)
+		result = Vector(x,y)
+		return result
 
 	def getGraphicsKey(self, obj):
 		return obj.type
