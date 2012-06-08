@@ -2,7 +2,7 @@ from blockvisualizer import *
 from playervisualizer import *
 from common.vector import *
 from common.block import *
-from tileset import make_tileset
+from tileset import TileSet
 
 class MapVisualizer:
 	def __init__(self, mapdata, playerid, screenDim):
@@ -10,7 +10,7 @@ class MapVisualizer:
 		self.playerid = playerid
 		self.screenDim = screenDim
 
-		self.tileset = make_tileset("data/tiles.png", 16, 16)
+		self.tileset = TileSet("data/tiles.png", 16, 16)
 		self.blockvisualizer = BlockVisualizer(self.tileset)
 		self.playervisualizer = PlayerVisualizer([
 			"client/graphics/player_0.png",
