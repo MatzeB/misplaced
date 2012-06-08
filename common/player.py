@@ -7,6 +7,7 @@ class Interaction:
 	NoInteraction = 0
 	Destroy = 1
 	Create = 2
+        PickUp = 3
 
 class Direction:
 	NoDir = 0

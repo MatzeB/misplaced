@@ -8,4 +8,5 @@ class NetworkCommand:
 	Player_Command_Down = "player_command_down"
 	Player_Command_Up = "player_command_up"
 	Player_Command_Destroy = "player_command_destroy"
+	Player_Command_PickUp = "player_command_pickup"
 	Player_Command_Create = "player_command_create"

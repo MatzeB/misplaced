@@ -110,6 +110,9 @@ class Main:
 				elif e.key == pygame.K_SPACE:
 					self.networkClient.send(NetworkCommand.Player_Command_Destroy, True)
 					self.player_interact(Interaction.Destroy, True)
+				elif e.key == pygame.K_RETURN:
+					self.networkClient.send(NetworkCommand.Player_Command_PickUp, True)
+					self.player_interact(Interaction.PickUp, True)
 
 			
 			elif e.type == pygame.KEYUP:
@@ -131,6 +134,9 @@ class Main:
 				elif e.key == pygame.K_SPACE:
 					self.networkClient.send(NetworkCommand.Player_Command_Destroy, False)
 					self.player_interact(Interaction.Destroy, True)
+				elif e.key == pygame.K_RETURN:
+					self.networkClient.send(NetworkCommand.Player_Command_PickUp, False)
+					self.player_interact(Interaction.PickUp, False)
 
 	
 

@@ -209,6 +209,9 @@ if __name__ == "__main__":
 	def player_command_destroy(client, doit):
 		client.player.interact(Interaction.Destroy, doit == "True")
 
+	def player_command_pickup(client, doit):
+		client.player.interact(Interaction.PickUp, doit == "True")
+
 	def player_command_create(client, doit):
 		client.player.interact(Interaction.Create, doit == "True")
 
@@ -227,6 +230,7 @@ if __name__ == "__main__":
 	server.player_command_up = player_command_up
 	server.player_command_down = player_command_down
 	server.player_command_destroy = player_command_destroy
+	server.player_command_pickup = player_command_pickup
 	server.player_command_create = player_command_create
 	server.ping = ping
 
