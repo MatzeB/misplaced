@@ -64,10 +64,10 @@ class Server:
 		try:
 			fine = my_sendall(client.conn, text + "\n")
 		except:
+			print "Send to client %s failed, dropping" % client
 			self._drop_client(client)
 
 	def _drop_client(self, client):
-		print "Client %s left." % (client.addr, )
 		client.inactive = True
 		if hasattr(self, "left"):
 			method = getattr(self, "left")
@@ -98,11 +98,13 @@ class Server:
 			try:
 				data = client.conn.recv(4096)
 				if not data:
+					print "Receiving from client %s failed, dropping" % client
 					self._drop_client(client)
 					continue
 				data = client.partialdata + data
 			except socket.error as e:
 				if e.errno == 10054:
+					print "Receiving from client %s failed with 10054" % client
 					self._drop_client(client)
 				continue
 
