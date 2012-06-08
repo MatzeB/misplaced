@@ -1,6 +1,7 @@
 import pickle, base64
 from block import *
 from player import *
+from common.vector import *
 
 class Map:
 	def __init__(self, blocks_horizontal, blocks_vertical):
@@ -32,6 +33,31 @@ class Map:
 
 		return mapupdate
 
+	def findNearestBlockAt(self, position):
+		result = None
+		
+		if position.x < 0 or position.x >= self.blocks_horizontal * TILE_WIDTH: return result
+		if position.y < 0 or position.y >= self.blocks_vertical * TILE_HEIGHT: return result
+
+		minDist = -1
+		ix = int(position.x/TILE_WIDTH)
+		iy = int(position.y/TILE_HEIGHT)
+		for x in range(ix, ix+1):
+			for y in range(iy, iy+1):
+				block = self.blocks[x][y]
+				dist = Vector.distance(block.getCenterPosition(), position)
+				if minDist == -1 or dist < minDist:
+					result = block
+					minDist = dist
+
+
+		return result
+
+	def getTargetBlock(self, position, direction):
+		dirvector = direction_vectors[direction]
+		targetpos = position + dirvector * 16
+		return self.findNearestBlockAt(targetpos)
+
 
 	def update(self, dt):
 		for x in range(self.blocks_horizontal):
@@ -43,6 +69,7 @@ class Map:
 
 			if player.currentInteraction == Interaction.Destroy:
 				block = self.getTargetBlock(player.position, player.currentDirection)
+				player.updateInteraction(dt, block)
 
 	def generate(self):
 		for x in range(self.blocks_horizontal):

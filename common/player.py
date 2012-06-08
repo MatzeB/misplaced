@@ -25,7 +25,8 @@ direction_vectors = [
 
 class Player:
 
-	def __init__(self, id="", x=0, y=0):
+	def __init__(self, onClient, id="", x=0, y=0):
+		self.isOnClient = onClient
 		self.id = id
 		self.name = "unnamed"
 		self.visible = False
@@ -37,6 +38,7 @@ class Player:
 		self.movementAcceleration = 200
 		self.currentDirection = Direction.Up
 		self.currentInteraction = Interaction.NoInteraction
+		self.currentInteractionBlockType = None
 
 	def interact(self, interaction, setInteracting):
 		if setInteracting:
@@ -58,6 +60,23 @@ class Player:
 
 		self.isDirty = True
 
+	def interaction_destroy_dirt(self, dt, block):
+		if self.isOnClient:
+			print block.type
+
+	def updateInteraction(self, dt, block):
+		if not block:
+			self.currentInteractionBlockType = None
+			return
+
+		if self.currentInteraction == Interaction.Destroy:
+			self.currentInteractionBlockType = block.type
+			
+			#if block.type == BlockType.Dirt:
+			self.interaction_destroy_dirt(dt, block)
+		else:
+			self.currentInteractionBlockType = None
+
 	def update(self, dt):
 		if self.velocity.getLength() > 0 or self.acceleration.getLength() > 0:
 			self.velocity += self.acceleration
@@ -74,6 +93,7 @@ class Player:
 		if self.targetposition:
 			self.position += (self.targetposition - self.position) * dt
 
+
 	def setUpdateData(self, data, packetTime):
 		self.name = data.name
 		self.visible = data.visible
@@ -83,10 +103,11 @@ class Player:
 		self.movementAcceleration = data.movementAcceleration
 		self.currentDirection = data.currentDirection
 		self.currentInteraction = data.currentInteraction
+		self.currentInteractionBlockType = data.currentInteractionBlockType
 
 
 	def serialize(self):
-		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
 			self.id,
 			self.name,
 			self.visible,
@@ -95,14 +116,15 @@ class Player:
 			self.acceleration.serialize(),
 			self.movementAcceleration,
 			self.currentDirection,
-			self.currentInteraction
+			self.currentInteraction,
+			self.currentInteractionBlockType
 		)
 
 		return result
 
 	@staticmethod
 	def deserialize(strdata):
-		result = Player()
+		result = Player(True)
 		
 		parts = strdata[1:-1].split(",")
 
@@ -115,5 +137,9 @@ class Player:
 		result.movementAcceleration = float(parts[6])
 		result.currentDirection = int(parts[7])
 		result.currentInteraction = int(parts[8])
+		if parts[9] == "None":
+			result.currentInteractionBlockType = None
+		else:
+			result.currentInteractionBlockType = int(parts[9])
 
 		return result

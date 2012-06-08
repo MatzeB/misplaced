@@ -81,7 +81,7 @@ class Server:
 				(conn, addr) = newclient
 				print "Connect by ", addr
 				client = Client(conn, addr)
-				client.id = len(self.clients)
+				client.id = str(len(self.clients))
 				self.clients.append(client)
 				if hasattr(self, "joined"):
 					method = getattr(self, "joined")
@@ -166,7 +166,7 @@ if __name__ == "__main__":
 		client.player.name = newname
 		client.player.visible = True
 
-		server.send(client, "welcome " + client.player.id)
+		server.send(client, "welcome " + str(client.player.id))
 		server.send(client, "mapdata " + mapdata.serialize())
 
 	def abort(client, args):
@@ -181,8 +181,8 @@ if __name__ == "__main__":
 
 	def left(client):
 		player = client.player
-		if player in mapdata.players:
-			del mapdata.players[player]
+		if mapdata.players.has_key(player.id):
+			del mapdata.players[player.id]
 
 	def player_command_right(client, doit):
 		client.player.move(Direction.Right, doit == "True")
@@ -196,8 +196,11 @@ if __name__ == "__main__":
 	def player_command_down(client, doit):
 		client.player.move(Direction.Down, doit == "True")
 
-	def player_command_attack(client, doit):
-		pass # todo
+	def player_command_destroy(client, doit):
+		client.player.interact(Interaction.Destroy, doit == "True")
+
+	def player_command_create(client, doit):
+		client.player.interact(Interaction.Create, doit == "True")
 
 	def ping(client, number):
 		global server
@@ -213,7 +216,8 @@ if __name__ == "__main__":
 	server.player_command_left = player_command_left
 	server.player_command_up = player_command_up
 	server.player_command_down = player_command_down
-	server.player_command_attack = player_command_attack
+	server.player_command_destroy = player_command_destroy
+	server.player_command_create = player_command_create
 	server.ping = ping
 
 	t = time.clock()

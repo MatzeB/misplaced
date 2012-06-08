@@ -39,7 +39,7 @@ class Client:
 	
 		while True:	
 			try:
-				data = self.s.recv(10)
+				data = self.s.recv(4096)
 				if not data:
 					print "Server quit"
 					self.connected = False

@@ -1,3 +1,5 @@
+from common.vector import *
+
 class BlockType:
 	Dirt = 0
 	Gras = 1
@@ -20,6 +22,9 @@ class Block:
 			#self.isDirty = True
 
 		#	print "block change"
+
+	def getCenterPosition(self):
+		return Vector(self.x,self.y) * 32 + Vector(16,16)
 
 	def clientUpdate(self, dt):
 		pass
