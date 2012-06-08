@@ -50,23 +50,23 @@ class MapVisualizer:
 		for id,player in self.map.players.iteritems():
 			self.playervisualizer.clientUpdate(dt, player)
 
-		self.updateOffset(dt)
+		#self.updateOffset(dt)
 
 	def findPlayer(self):
-		result = None
-
-		for id,player in self.map.players.iteritems():
-			if id == self.playerid:
-				result = player
-				break
-
-		return result
+		if self.map.players.has_key(self.playerid):
+			return self.map.players[self.playerid]
+		else:
+			return None
 
 	def updateOffset(self, dt):
 		player = self.findPlayer()
-		if player:
-			self.targetOffset = player.position - self.screenDim/2
-			if self.targetOffset.x < 0: self.targetOffset.x = 0
-			if self.targetOffset.y < 0: self.targetOffset.y = 0
 
-			self.currentOffset += (self.targetOffset - self.currentOffset) * dt
+		if player:
+			self.targetOffset = -(player.position - self.screenDim/2)
+			#print self.targetOffset
+			if self.targetOffset.x > 0: self.targetOffset.x = 0
+			if self.targetOffset.y > 0: self.targetOffset.y = 0
+			#if self.targetOffset.x < -self.map.width: self.targetOffset.x = 0
+			#if self.targetOffset.y > -self.map.height: self.targetOffset.y = 0
+
+			self.currentOffset = (self.targetOffset - self.currentOffset) * dt

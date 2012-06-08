@@ -55,7 +55,7 @@ class Main:
 
 	def pong(self, number):
 		t = time.clock()
-		self.packetTime = t - self.lastPingTime
+		self.packetTime = (t - self.lastPingTime)/2.0
 		self.lastPongTime = t
 
 	def welcomeMessage(self, id):
@@ -66,7 +66,7 @@ class Main:
 		#mapdata = parse_map(open(strmapdata))
 		mapdata = Map.deserialize(strmapdata)
 		if not self.map:
-			self.map = MapVisualizer(mapdata, self.playername, self.screenDim)
+			self.map = MapVisualizer(mapdata, self.playerid, self.screenDim)
 		else:
 			self.map.setData(mapdata)
 	

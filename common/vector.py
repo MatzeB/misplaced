@@ -222,6 +222,9 @@ class Vector:
 		else:
 			return NotImplemented
 	
+	def __neg__(self):
+		return Vector(-self.x, -self.y)
+
 	def __len__(self):
 		return int(sqrt(self.x**2 + self.y**2))
 	def getLength(self):
