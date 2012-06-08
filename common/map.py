@@ -6,6 +6,7 @@ from common.vector import *
 class Map:
 	def __init__(self, blocks_horizontal, blocks_vertical):
 		self.blocks = {}
+		self.background = {}
 		self.players = {}
 
 		self.width = blocks_horizontal * 32
@@ -16,6 +17,7 @@ class Map:
 		self.blocks = {}
 		for x in range(self.blocks_horizontal):
 			self.blocks[x] = {}
+			self.background[x] = {}
 
 	def getMapUpdate(self):
 		mapupdate = MapUpdate()
@@ -74,8 +76,10 @@ class Map:
 	def generate(self):
 		for x in range(self.blocks_horizontal):
 			self.blocks[x] = {}
+			self.background[x] = {}
 			for y in range(self.blocks_vertical):
 				self.blocks[x][y] = Block(x,y)
+				self.background[x][y] = Block(x,y)
 
 	def addPlayer(self, player):
 		self.players[player.id] = player
@@ -103,8 +107,12 @@ class Map:
 
 		for x in range(self.blocks_horizontal):
 			for y in range(self.blocks_vertical):
-				result += self.blocks[x][y].serialize() + "/"
+				result += self.background[x][y].serialize() + "/"
+		result += "|"
 
+		for x in range(self.blocks_horizontal):
+			for y in range(self.blocks_vertical):
+				result += self.blocks[x][y].serialize() + "/"
 		result += "|"
 
 		for id,player in self.players.iteritems():
@@ -120,16 +128,22 @@ class Map:
 		#return pickle.loads(data)
 
 		parts = strdata[1:-1].split("|")
-		strblocks = parts[2].split("/")
-		strplayers = parts[3].split("/")
+		strblocks_background = parts[2].split("/")
+		strblocks_blocks = parts[3].split("/")
+		strplayers = parts[4].split("/")
 		
 		result = Map(int(parts[0]), int(parts[1]))
 
-		for b in strblocks:
+		for b in strblocks_background:
+			if len(b.strip()) > 0:
+				block = Block.deserialize(b)
+				result.background[block.x][block.y] = block
+
+		for b in strblocks_blocks:
 			if len(b.strip()) > 0:
 				block = Block.deserialize(b)
 				result.blocks[block.x][block.y] = block
-		
+			
 		for p in strplayers:
 			if len(p.strip()) > 0:
 				player = Player.deserialize(p)

@@ -10,7 +10,7 @@ HOST = ''
 PORT = 12345
 
 UPDATE_INTERVALL = 1.0/30.0
-SEND_INTERVALL = 0.1
+SEND_INTERVALL = 1.0
 
 mapname = "data/test.stl"
 mapdata = parse_map(open(mapname))

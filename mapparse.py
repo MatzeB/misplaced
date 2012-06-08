@@ -75,16 +75,8 @@ def parse_map(input):
 			else:
 				next_token()
 
-		assert width
-		assert height
-		assert tiles
-		map = Map(width, height)
-		map.generate()
-		for y in range(height):
-			for x in range(width):
-				map.blocks[x][y].type = tiles[y*width+x]
-			
-		return map
+		assert len(tiles) == width * height
+		return (width,height,tiles)
 
 	global i
 	global tokens
@@ -101,7 +93,19 @@ def parse_map(input):
 			next_token()
 			if token == "tilemap":
 				next_token()
-				map = parse_tilemap()
+				(width,height,tiles) = parse_tilemap()
+
+				if map == None:
+					map = Map(width, height)
+					map.generate()
+					dest = map.background
+				else:
+					dest = map.blocks
+
+				for y in range(height):
+					for x in range(width):
+						dest[x][y].type = tiles[y*width+x]
+
 			else:
 				next_token()
 		elif token == None:
