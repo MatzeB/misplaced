@@ -100,21 +100,21 @@ class Main:
 		player = None
 		if self.map and self.map.map.players.has_key(self.playerid):
 			player = self.map.map.players[self.playerid]
-
-		if self.current_state == "warmup":
-			if self.lastWinner:
-				self.centertext1.change_text("The %s team has won!" % self.lastWinner)
-			if not player.voted_begin:
-				self.centertext2.change_text("Warmup, press F3 when ready!")
-		else:
-			text = ""
-			if player.evil is not None:
-				if player.evil:
-					text += "You are evil. "
-				else:
-					text += "You are nice. "
-			text += "%.0fs left." % (ROUND_TIME + self.startTime - time.clock())
-			self.statetext.change_text(text)
+		if player:
+			if self.current_state == "warmup":
+				if self.lastWinner:
+					self.centertext1.change_text("The %s team has won!" % self.lastWinner)
+				if not player.voted_begin:
+					self.centertext2.change_text("Warmup, press F3 when ready!")
+			else:
+				text = ""
+				if player.evil is not None:
+					if player.evil:
+						text += "You are evil. "
+					else:
+						text += "You are nice. "
+				text += "%.0fs left." % (ROUND_TIME + self.startTime - time.clock())
+				self.statetext.change_text(text)
 
 	def mapUpdate(self, strmapdata):
 		# Assume the server just sent us a filename
