@@ -49,8 +49,8 @@ def polygon(points, color, aa=True, alpha=255.0):
     glDisable(GL_TEXTURE_2D)
     if aa:
         glEnable(GL_POLYGON_SMOOTH)
-    glBegin(GL_POLYGON)
     glColor4f(color[0]/255.0, color[1]/255.0, color[2]/255.0, alpha/255.0)
+    glBegin(GL_POLYGON)
     for p in points:
         glVertex3f(p[0], p[1], 0)
     glEnd()

@@ -51,16 +51,8 @@ def get_size():
 def init_gl(bg):
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE)
     glEnable(GL_TEXTURE_2D)
-    glShadeModel(GL_SMOOTH)
     glClearColor(bg[0], bg[1], bg[2], bg[3])
-    glClearDepth(1.0)
-    glEnable(GL_DEPTH_TEST)
-    glEnable(GL_ALPHA_TEST)
-    glDepthFunc(GL_LEQUAL)
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-    glAlphaFunc(GL_NOTEQUAL,0.0)
     
 def enable2D(rect):
     glMatrixMode(GL_PROJECTION)
@@ -68,4 +60,6 @@ def enable2D(rect):
     glOrtho(rect[0],rect[0]+rect[1],rect[2]+rect[3],rect[2], -1, 1)
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
+    glDisable(GL_DEPTH_TEST)
+    glDisable(GL_ALPHA_TEST)
 
