@@ -12,8 +12,8 @@ direction2RoationMap = {
 	Direction.NoDir: 0,
 	Direction.Left: 90,
 	Direction.Right: 270,
-	Direction.Up: 0,
-	Direction.Down: 180
+	Direction.Up: 180,
+	Direction.Down: 0
 }
 
 class CarriedBlock(BlockVisualizer):
