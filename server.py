@@ -235,6 +235,8 @@ if __name__ == "__main__":
 		player.client = client
 		mapdata.addPlayer(player)
 		mapdata.placePlayer(player)
+		if state == "game":
+			player.evil = randint(0,2) == 0
 		client.player = player
 
 	def left(client):
