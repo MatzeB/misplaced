@@ -46,6 +46,17 @@ class Player:
 		self.voted_begin = False
 		self.stunned = False
 		self.evil = None
+	
+	def stun(self):
+		if not self.stunned:
+			self.stunned = True
+			self.isDirty = True
+			self.currentInteraction = Interaction.NoInteraction
+
+	def unStun(self):
+		if self.stunned:
+			self.stunned = False
+			self.isDirty = True
 
 	def reset(self):
 		self.stunned = False

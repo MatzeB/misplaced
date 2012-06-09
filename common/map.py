@@ -117,12 +117,10 @@ class Map:
 
 					if victim:
 						if victim.stunned:	
-							victim.stunned = False
+							victim.unStun()
 						else:
-							victim.stunned = True
-							victim.currentInteraction = Interaction.NoInteraction
+							victim.stun()
 						player.currentInteraction = Interaction.NoInteraction
-						victim.isDirty = True
 						player.isDirty = True
 
 			if player.currentInteraction == Interaction.PickUp:
