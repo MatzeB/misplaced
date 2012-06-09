@@ -73,7 +73,7 @@ class Main:
 	def state(self, newstate):
 		self.current_state = newstate
 		if self.map:
-			self.map.current_state = self.current_state
+			self.map.setCurrentState(self.current_state)
 		self.updateStateText()
 	
 	def updateStateText(self):

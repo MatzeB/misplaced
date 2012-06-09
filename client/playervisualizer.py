@@ -5,6 +5,7 @@ from visualizer import *
 from blockvisualizer import *
 from common.player import *
 from pygame.color import Color
+from math import *
 
 direction2RoationMap = {
 	Direction.NoDir: 0,
@@ -40,6 +41,11 @@ class PlayerVisualizer(Visualizer):
 		self.nameCache = {}
 		fontname = pygame.font.get_default_font()
 		self.font = pygame.font.Font(fontname, 14)
+		attitudeFont = pygame.font.Font(fontname, 12)
+		self.evilAttitudeImage = RenderText("EVIL", Color("black"), attitudeFont)
+		self.goodAttitudeImage = RenderText("GOOD", Color("white"), attitudeFont)
+
+		self.current_state = "warmup"
 		
 
 	def getPosition(self, obj):
@@ -96,6 +102,14 @@ class PlayerVisualizer(Visualizer):
 
 		textImg = self.nameCache[obj.name]
 		textImg.draw(obj.position + offset + Vector(-textImg.get_width()/2+16, -32))
+
+		if self.current_state == "warmup" and obj.evil is not None:
+			img = self.goodAttitudeImage
+			if obj.evil:
+				img = self.evilAttitudeImage
+			#img.rotate(15)# + sin(time.clock()*100%(2*pi))*10)
+			img.draw(obj.position + offset + Vector(-textImg.get_width()/2+16, -20))
+
 	
 	def clientUpdate(self, dt, obj):
 		Visualizer.clientUpdate(self, dt, obj)
