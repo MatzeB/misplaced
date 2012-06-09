@@ -16,7 +16,7 @@ class CarriedBlock(BlockVisualizer):
         BlockVisualizer.__init__(self, tileset)
     
     def getPosition(self, obj):
-        return obj.position
+        return obj.getTargetPosition()
 
     def getGraphicsKey(self, obj):
         return obj.carrying
@@ -29,7 +29,7 @@ class PlayerVisualizer(Visualizer):
 
 	def __init__(self, tileset, graphicfiles):
 		Visualizer.__init__(self, graphicfiles)
-                self.blockvisualizer = CarriedBlock(tileset)
+                self.carriedblockvisualizer = CarriedBlock(tileset)
 
 	def getPosition(self, obj):
 		return obj.position
@@ -56,10 +56,10 @@ class PlayerVisualizer(Visualizer):
 			Visualizer.draw(self, offset, obj, rotation=self.getDirectionRotation(obj))
 
 			pygl2d.draw.circle(
-                            (obj.position + self.getTargetOffset(obj) + offset).toIntArr(),
+                            (obj.getTargetPosition() + offset).toIntArr(),
                             8, (255,0,0), 100)
                         if obj.carrying:
-                            self.blockvisualizer.draw(offset + self.getTargetOffset(obj), obj, rotation=self.getDirectionRotation(obj))
+                            self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 	
 	def clientUpdate(self, dt, obj):
 		Visualizer.clientUpdate(self, dt, obj)

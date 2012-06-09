@@ -43,6 +43,16 @@ class Player:
 		self.currentInteractionBlockType = None
                 self.carrying = None
 
+        
+        def getTargetPosition(self):
+	    direction = self.currentDirection
+	    if direction == Direction.NoDir:
+		drection = self.lastDirection
+	    dirvector = direction_vectors[direction]
+	    targetpos = self.position + Vector(16,16) + dirvector * 16
+	    return targetpos
+
+
 	def interact(self, interaction, setInteracting):
 		if setInteracting:
 			if interaction == Interaction.Destroy:
