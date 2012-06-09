@@ -99,8 +99,6 @@ class Image:
 	newW= image2.get_width()
 	fracH=oldH/float(newH)
 	fracW=oldW/float(newW)
-        assert fracH == 1.0
-        assert fracW == 1.0
 
         #convert to GL texture
         self.texture = Texture(image2, filters)
@@ -186,6 +184,8 @@ class Image:
         glPopMatrix()
 
     def draw_part(self, (x, y), (left, top, right, bottom)):
+        assert self.fracH == 1.0
+        assert self.fracW == 1.0
         glPushMatrix()
         glTranslatef(x+self.ox, self.win_size[1] - y - self.oy, 0)
         glColor4f(*self.color)
