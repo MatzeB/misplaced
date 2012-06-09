@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import pygame, os, sys, time
 
@@ -42,6 +42,7 @@ class Main:
 		self.networkClient.mapdataupdate = self.mapDataUpdate
 		self.networkClient.welcome = self.welcomeMessage
 		self.networkClient.pong = self.pong
+		self.networkClient.left = self.playerLeft
 
 		self.map = None
 
@@ -74,7 +75,10 @@ class Main:
 		mapupdate = MapUpdate.deserialize(strmapupdate)
 		if self.map:
 			self.map.setUpdateData(mapupdate, self.packetTime)
-	
+
+	def playerLeft(self, playerid):
+		if self.map.map.players.has_key(playerid):
+			del self.map.map.players[playerid]
 
 	# ====================================================================================================
 	# =======================           Inputs                       =====================================
@@ -110,9 +114,6 @@ class Main:
 				elif e.key == pygame.K_SPACE:
 					self.networkClient.send(NetworkCommand.Player_Command_Destroy, True)
 					self.player_interact(Interaction.Destroy, True)
-				elif e.key == pygame.K_RETURN:
-					self.networkClient.send(NetworkCommand.Player_Command_PickUp, True)
-					self.player_interact(Interaction.PickUp, True)
 
 			
 			elif e.type == pygame.KEYUP:
@@ -134,9 +135,6 @@ class Main:
 				elif e.key == pygame.K_SPACE:
 					self.networkClient.send(NetworkCommand.Player_Command_Destroy, False)
 					self.player_interact(Interaction.Destroy, True)
-				elif e.key == pygame.K_RETURN:
-					self.networkClient.send(NetworkCommand.Player_Command_PickUp, False)
-					self.player_interact(Interaction.PickUp, False)
 
 	
 

@@ -189,11 +189,11 @@ if __name__ == "__main__":
 		client.player = player
 
 	def left(client):
-		print "player " + client.id + " left"
-
+		global server
 		player = client.player
 		if mapdata.players.has_key(player.id):
 			del mapdata.players[player.id]
+		server.sendall("left %s" % player.id)
 
 	def player_command_right(client, doit):
 		client.player.move(Direction.Right, doit == "True")
