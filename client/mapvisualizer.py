@@ -5,6 +5,7 @@ from common.block import *
 from common.tileset import TileSet
 from common.sprite import PlayerSpriteSet
 from libs import pygl2d
+from debug import DEBUG
 
 class MapVisualizer:
 	def __init__(self, mapdata, playerid, screenDim):
@@ -67,7 +68,7 @@ class MapVisualizer:
 			block = self.map.findNearestBlockAt(
 			                                    self.map.background,
 			                                    player.getTargetPosition())
-			if block != None:
+			if block != None and DEBUG:
 				pygl2d.draw.rect(
 								(block.x * self.blockvisualizer.blockWidth + self.currentOffset.x - TILE_WIDTH/2,
 				 block.y * self.blockvisualizer.blockHeight + self.currentOffset.y - TILE_HEIGHT/2,
@@ -76,13 +77,14 @@ class MapVisualizer:
 				(255,0,0), alpha=100)
 
 			# Debug highlighting for collision bounding box
-			bbox = player.boundingBox()
-			bbox = (
-				bbox[0] + self.currentOffset.x,
-				bbox[1] + self.currentOffset.y,
-				bbox[2]-bbox[0],
-				bbox[3]-bbox[1])
-			pygl2d.draw.rect(bbox, (0, 0, 255), alpha=100)
+			if DEBUG:
+				bbox = player.boundingBox()
+				bbox = (
+					bbox[0] + self.currentOffset.x,
+					bbox[1] + self.currentOffset.y,
+					bbox[2]-bbox[0],
+					bbox[3]-bbox[1])
+				pygl2d.draw.rect(bbox, (0, 0, 255), alpha=100)
 
 	def clientUpdate(self, dt):
 		for x in range(self.map.blocks_horizontal):

@@ -6,6 +6,7 @@ from blockvisualizer import *
 from common.player import *
 from pygame.color import Color
 from math import *
+from debug import DEBUG
 
 direction2RoationMap = {
 	Direction.NoDir: 0,
@@ -93,9 +94,10 @@ class PlayerVisualizer(Visualizer):
 
 			targetpos = obj.position + Vector(16,16) + dirvector * 16 + offset
 
-			pygl2d.draw.circle(
-				(obj.getTargetPosition() + offset).toIntArr(),
-				8, (255,0,0), 100)
+			if DEBUG:
+				pygl2d.draw.circle(
+					(obj.getTargetPosition() + offset).toIntArr(),
+					8, (255,0,0), 100)
 			if self.getDirection(obj) != Direction.Up and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 

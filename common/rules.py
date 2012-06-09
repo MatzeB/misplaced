@@ -1,2 +1,6 @@
+from debug import DEBUG
 # in seconds
-ROUND_TIME = 10
+if DEBUG:
+	ROUND_TIME = 10
+else:
+	ROUND_TIME = 600
