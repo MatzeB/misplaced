@@ -63,6 +63,7 @@ class Main:
 		self.networkClient.left = self.playerLeft
 		self.networkClient.state = self.state
 		self.networkClient.winner = self.winner
+		self.networkClient.voteresult = self.voteresult
 
 		self.map = None
 
@@ -92,6 +93,11 @@ class Main:
 	def winner(self, newWinner):
 		self.lastWinner = newWinner
 	
+	def voteresult(self, newVoteResult):
+		votes, req = newVoteResult.split('/')
+		self.votesCount = int(votes)
+		self.votesReq = int(req)
+	
 	def updateStateText(self):
 		self.centertext1.change_text("")
 		self.centertext2.change_text("")
@@ -106,6 +112,8 @@ class Main:
 					self.centertext1.change_text("The %s team has won!" % self.lastWinner)
 				if not player.voted_begin:
 					self.centertext2.change_text("Warmup, press F3 when ready!")
+				else:
+					self.centertext2.change_text("Waiting for %d of %d players..." % (self.votesReq - self.votesCount, self.votesReq))
 			else:
 				text = ""
 				if player.evil is not None:
