@@ -17,8 +17,8 @@ class MapVisualizer:
 		self.playervisualizer = PlayerVisualizer(
                         self.tileset,
                         [
-			"client/graphics/player_0.png",
-			"client/graphics/player_1.png"
+			"data/player_0.png",
+			"data/player_1.png"
 		])
 
 		self.targetOffset = Vector(0,0)
