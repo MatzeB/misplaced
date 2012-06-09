@@ -15,9 +15,9 @@ class CollisionDetector:
 			if self.intersects(bbox, block.boundingBox()):
 				collisions.append(block)
 
-		for other in self.map.players.values():
-			if self.intersects(bbox, other.boundingBox()):
-				collisions.append(other)
+		#for other in self.map.players.values():
+		#	if self.intersects(bbox, other.boundingBox()):
+		#		collisions.append(other)
 
 		return collisions
 
