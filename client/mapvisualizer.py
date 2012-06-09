@@ -51,11 +51,9 @@ class MapVisualizer:
 			self.playervisualizer.draw(self.currentOffset, player)
 
                         # Debug highlighting
-                        block = self.map.getTargetBlock(
+                        block = self.map.findNearestBlockAt(
                                 self.map.background,
-                                player.position,
-                                player.currentDirection,
-                        )
+                                player.getTargetPosition())
                         pygl2d.draw.rect(
                             	(block.x * self.blockvisualizer.blockWidth + self.currentOffset.x - TILE_WIDTH/2,
 				 block.y * self.blockvisualizer.blockHeight + self.currentOffset.y - TILE_HEIGHT/2,
