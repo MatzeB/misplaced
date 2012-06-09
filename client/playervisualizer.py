@@ -86,9 +86,8 @@ class PlayerVisualizer(Visualizer):
 			if self.getDirection(obj) == Direction.Up and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 
-			Visualizer.draw(self, offset + Vector(0,-11.), obj, rotation=0)#self.getDirectionRotation(obj))
-
-			targetpos = obj.position + dirvector * 16 + offset
+			# -11 looks nicer
+			Visualizer.draw(self, offset + Vector(0,-11), obj, rotation=0)#self.getDirectionRotation(obj))
 
 			if DEBUG:
 				pygl2d.draw.circle(
