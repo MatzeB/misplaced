@@ -55,7 +55,7 @@ class PlayerVisualizer(Visualizer):
 		#print len(self.graphics)
 		if obj.stunned:
 			return 5
-		elif obj.velocity.getLength() > 0:
+		elif obj.velocity.getLength() > 1:
 			return int(time.clock()*10%8+1)
 		else:
 			return 0

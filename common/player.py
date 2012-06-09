@@ -1,5 +1,6 @@
 from vector import *
 from block import BlockType
+from client.soundconstants import Sounds
 
 TILE_WIDTH = 32
 TILE_HEIGHT = 32
@@ -187,6 +188,11 @@ class Player:
 
 		self.isDirty = True
 
+	def playSounds(self):
+		if self.currentInteraction == Interaction.Destroy:
+			if not Sounds.attackChannel or not Sounds.attackChannel.get_busy():
+				Sounds.attackChannel = Sounds.attack.play()
+
 	def clientUpdate(self, dt, collision_detector):
 		self.update(dt, collision_detector)
 
@@ -197,6 +203,7 @@ class Player:
 			else:
 				self.position = self.targetposition
 
+		self.playSounds()
 	
 	# Get (left,top,right,bottom) bounding box
 	def boundingBox(self):

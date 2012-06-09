@@ -194,7 +194,7 @@ class Main:
 					self.movePlayer(Direction.Down, False)
 				elif e.key == pygame.K_SPACE:
 					self.networkClient.send(NetworkCommand.Player_Command_Destroy, False)
-					self.player_interact(Interaction.Destroy, True)
+					self.player_interact(Interaction.Destroy, False)
                                 elif e.key == pygame.K_RETURN:
                                         self.networkClient.send(NetworkCommand.Player_Command_PickUp, False)
                                         self.player_interact(Interaction.PickUp, False)
@@ -205,9 +205,9 @@ class Main:
 	# ====================================================================================================
 	
 	def playMusic(self):
-		pass
 		if not pygame.mixer.music.get_busy():
-			Sounds.music.play()
+			#Sounds.music.play()
+			pass
 	
 	def initSound(self):
 		try: #changed
