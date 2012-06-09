@@ -21,6 +21,11 @@ class MapVisualizer:
 		self.targetOffset = Vector(0,0)
 		self.currentOffset = Vector(0,0)
 
+	def setCurrentState(self, state):
+		self.current_state = state
+		self.blockvisualizer.current_state = state
+		self.playervisualizer.current_state = state
+
 	def setData(self, mapdata):
 		self.map = mapdata # todo: interpolate
 

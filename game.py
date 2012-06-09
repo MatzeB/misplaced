@@ -36,7 +36,7 @@ class Main:
 		self.playername = playername or "Player_" + str(int(100 * random()))
 		self.playerid = None
 		
-		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced")
+		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced", bg=(0.0, 0.0, 0.0, 0.0))
 
 		pygame.font.init()
 		fontname = pygame.font.get_default_font()
@@ -75,7 +75,7 @@ class Main:
 	def state(self, newstate):
 		self.current_state = newstate
 		if self.map:
-			self.map.current_state = self.current_state
+			self.map.setCurrentState(self.current_state)
 		if self.current_state == "game":
 			self.startTime = time.clock()
 	

@@ -8,7 +8,7 @@ from pygame.locals import *
 
 SCREEN_SIZE = [800, 600]
 
-def init(size, caption="PyGL2D App", flags=DOUBLEBUF):
+def init(size, caption="PyGL2D App", flags=DOUBLEBUF, bg=(0.0, 0.0, 0.0, 0.0)):
     """Initialise pygame and pyopengl <- return None
     """
     
@@ -23,7 +23,7 @@ def init(size, caption="PyGL2D App", flags=DOUBLEBUF):
     pygame.display.set_caption(caption)
     screen = pygame.display.set_mode(SCREEN_SIZE, flags)
     
-    init_gl()
+    init_gl(bg)
 
 def begin_draw():
     """Begin drawing <- return None
@@ -51,13 +51,13 @@ def get_size():
 ###################### INTERNAL ######################
 ######################################################
 
-def init_gl():
+def init_gl(bg):
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE)
     glEnable(GL_TEXTURE_2D)
     glShadeModel(GL_SMOOTH)
-    glClearColor(0.0, 0.0, 0.0, 0.0)
+    glClearColor(bg[0], bg[1], bg[2], bg[3])
     glClearDepth(1.0)
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_ALPHA_TEST)
