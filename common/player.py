@@ -58,7 +58,7 @@ class Player:
 		if direction == Direction.NoDir:
 			direction = self.lastDirection
 		dirvector = direction_vectors[direction]
-		targetpos = self.position + dirvector * target_distance[direction]
+		targetpos = self.position + dirvector * 16.
 		return targetpos
 
 	def interact(self, interaction, setInteracting):
