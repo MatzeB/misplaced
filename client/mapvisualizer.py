@@ -48,12 +48,11 @@ class MapVisualizer:
 					self.blockvisualizer.draw(self.currentOffset, background_block)
 					if self.tileset[background_block.type].solid and DEBUG:
 						bbox = background_block.boundingBox()
-						bbox = (
-							bbox[0] + self.currentOffset.x,
+						bbox = (bbox[0] + self.currentOffset.x,
 							bbox[1] + self.currentOffset.y,
-							bbox[2]-bbox[0],
-							bbox[3]-bbox[1],)
-						pygl2d.draw.rect(bbox, (255, 255, 0), alpha=100)
+							bbox[2] + self.currentOffset.x,
+							bbox[3] + self.currentOffset.y)
+						pygl2d.draw.rect(bbox, (255, 0, 0), alpha=100)
 				solid_block = self.map.blocks[x][y]
 				if solid_block.type != 0:
 					self.blockvisualizer.draw(self.currentOffset, solid_block)
@@ -64,12 +63,10 @@ class MapVisualizer:
 			                                    self.map.background,
 			                                    player.getTargetPosition())
 			if block != None:# and DEBUG:
-				pygl2d.draw.rect(
-								(block.x * self.blockvisualizer.blockWidth + self.currentOffset.x - TILE_WIDTH/2,
-				 block.y * self.blockvisualizer.blockHeight + self.currentOffset.y - TILE_HEIGHT/2,
-				 TILE_WIDTH,
-				 TILE_HEIGHT),
-				(255,255,255), alpha=100)
+				px = block.x * self.blockvisualizer.blockWidth + self.currentOffset.x - TILE_WIDTH/2
+				py = block.y * self.blockvisualizer.blockHeight + self.currentOffset.y - TILE_HEIGHT/2
+				bbox = (px, py, px+TILE_WIDTH, py+TILE_HEIGHT)
+				pygl2d.draw.rect(bbox, (255,255,255), alpha=100)
 
 			# Debug highlighting for collision bounding box
 			if DEBUG:
@@ -77,8 +74,8 @@ class MapVisualizer:
 				bbox = (
 					bbox[0] + self.currentOffset.x,
 					bbox[1] + self.currentOffset.y,
-					bbox[2]-bbox[0],
-					bbox[3]-bbox[1])
+					bbox[2] + self.currentOffset.x,
+					bbox[3] + self.currentOffset.y)
 				pygl2d.draw.rect(bbox, (0, 0, 255), alpha=100)
 				
 			self.playervisualizer.draw(self.currentOffset, player)

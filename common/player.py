@@ -26,14 +26,6 @@ direction_vectors = [
 	Vector( 0,  1),
 ]
 
-target_distance = [
-    0, # NoDir
-    16,
-    16,
-    16,
-    16,
-]
-
 class Player:
 
 	def __init__(self, onClient, id="", x=0, y=0):
@@ -66,7 +58,7 @@ class Player:
 		if direction == Direction.NoDir:
 			direction = self.lastDirection
 		dirvector = direction_vectors[direction]
-		targetpos = self.position + Vector(16,16) + dirvector * target_distance[direction]
+		targetpos = self.position + dirvector * 16.
 		return targetpos
 
 	def interact(self, interaction, setInteracting):
@@ -150,8 +142,8 @@ class Player:
 
 		destvel = self.velocity + self.acceleration
 		destpos = self.position + (destvel * dt)
-		destbbox = (destpos.x,    destpos.y,
-					destpos.x+32, destpos.y+32)
+		destbbox = (destpos.x-16., destpos.y-16.,
+					destpos.x+16., destpos.y+16.)
 		collisions = collision_detector.get_collisions(destbbox)
 		if self in collisions:
 			collisions.remove(self)
@@ -211,7 +203,8 @@ class Player:
 	
 	# Get (left,top,right,bottom) bounding box
 	def boundingBox(self):
-		return (self.position.x, self.position.y, self.position.x+32, self.position.y+32)
+		return (self.position.x-16., self.position.y-16.,
+		        self.position.x+16., self.position.y+16.)
 
 	def setUpdateData(self, data, packetTime):
 		self.name = data.name

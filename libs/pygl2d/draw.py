@@ -52,18 +52,21 @@ def polygon(points, color, aa=True, alpha=255.0):
     glColor4f(color[0]/255.0, color[1]/255.0, color[2]/255.0, alpha/255.0)
     glBegin(GL_POLYGON)
     for p in points:
-        glVertex3f(p[0], p[1], 0)
+        glVertex2f(p[0], p[1])
     glEnd()
     glColor3f(1.0,1.0,1.0)
     glDisable(GL_POLYGON_SMOOTH)
     glEnable(GL_TEXTURE_2D)
 
-def rect(rectstyle, color, width=0, alpha=255.0):
+def rect(rect, color, width=0, alpha=255.0):
     """Draw a rect <- return None
     """
-   
-    x, y, w, h = rectstyle
-    points = [[x, y], [x+w, y], [x+w, y+h], [x, y+h]]
+  
+    points = [
+        (rect[0], rect[1]),
+        (rect[0], rect[3]),
+        (rect[2], rect[3]),
+        (rect[2], rect[1]) ]
     if not width:
         polygon(points, color, aa=False, alpha=alpha)
     else:

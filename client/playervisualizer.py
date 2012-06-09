@@ -86,9 +86,9 @@ class PlayerVisualizer(Visualizer):
 			if self.getDirection(obj) == Direction.Up and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 
-			Visualizer.draw(self, offset + Vector(16,5), obj, rotation=0)#self.getDirectionRotation(obj))
+			Visualizer.draw(self, offset + Vector(0,-11.), obj, rotation=0)#self.getDirectionRotation(obj))
 
-			targetpos = obj.position + Vector(16,16) + dirvector * 16 + offset
+			targetpos = obj.position + dirvector * 16 + offset
 
 			if DEBUG:
 				pygl2d.draw.circle(
@@ -104,14 +104,13 @@ class PlayerVisualizer(Visualizer):
 			self.nameCache[obj.name] = RenderText(obj.name, Color("green"), self.font)
 
 		textImg = self.nameCache[obj.name]
-		textImg.draw(obj.position + offset + Vector(-textImg.get_width()/2+16, -32))
+		textImg.draw(obj.position + offset + Vector(-textImg.get_width()/2, -32))
 
 		if self.current_state == "warmup" and obj.evil is not None:
 			img = self.goodAttitudeImage
 			if obj.evil:
 				img = self.evilAttitudeImage
-			#img.rotate(15)# + sin(time.time()*100%(2*pi))*10)
-			img.draw(obj.position + offset + Vector(-textImg.get_width()/2+16, -20))
+			img.draw(obj.position + offset + Vector(-textImg.get_width()/2, -20))
 
 	
 	def clientUpdate(self, dt, obj, colldet):

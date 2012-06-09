@@ -87,7 +87,7 @@ class Map:
 		result = None
 		for id, player in self.players.iteritems():
 			if player != excluded:
-				dist = Vector.distance(player.position + Vector(16,16), position)
+				dist = Vector.distance(player.position, position)
 				if dist < minDist:
 					result = player
 					minDist = dist

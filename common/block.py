@@ -31,7 +31,7 @@ class Block:
 		#	print "block change"
 
 	def getCenterPosition(self):
-		return Vector(self.x,self.y) * 32 + Vector(16,16)
+		return Vector(self.x,self.y) * 32
 
 	def clientUpdate(self, dt):
 		pass
@@ -53,9 +53,9 @@ class Block:
 		return result
 
 	def boundingBox(self):
-		tx = self.x*32
-		ty = self.y*32
-		return (tx, ty, tx+32, ty+32)
+		p = self.getCenterPosition()
+		return (p.x-16., p.y-16.,
+		        p.x+16., p.y+16.)
 
 	@staticmethod
 	def deserialize(strdata):
