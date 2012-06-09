@@ -42,6 +42,9 @@ class PlayerSpriteSet:
 
 		self.sprites = sprites
 
+	def getStunnedSprites(self):
+		return self.sprites[36:43]
+
 	def getWalkAnimationSprites(self, direction):
 		if direction == 0 or direction == 1:
 			return self.sprites[9:18]
