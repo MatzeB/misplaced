@@ -25,11 +25,11 @@ class Map:
 
 	def allBlocks(self):
 		result = []
-		for row in self.blocks.values():
-			for b in row.values():
-				if b.type == 0:
-					continue
-				result.append(b)
+		#for row in self.blocks.values():
+		#	for b in row.values():
+		#		if b.type == 0:
+		#			continue
+		#		result.append(b)
 		for row in self.background.values():
 			for b in row.values():
 				if b.type == 0:
