@@ -37,11 +37,9 @@ class TileSet:
 		self.wood = 69
 		self.grass = 13
 		solid_tiles = [ 64, 66, 68, 69, 72, 73, 76, 77,
-			24, 25, 26,
-			28, 29, 30,
-			32, 33, 34,
-			36, 37, 38,
-			40, 41, 42,
+			24, 
+			28,
+			    37,
 			44, 45, 46,
 			# TODO add more tiles as solid...
 		]

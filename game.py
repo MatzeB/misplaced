@@ -16,6 +16,7 @@ from client.networkconstants import *
 from client.soundconstants import *
 from mapparse import parse_map
 from libs.pygl2d.font import RenderText
+from debug import DEBUG
 
 PING_INTERVALL = 3.0
 FREQ = 44100   # changed
@@ -287,12 +288,17 @@ class Main:
 
 if __name__ == '__main__':
 	playername = None
+	if "-debug" in sys.argv:
+		DEBUG=True
+		sys.argv.remove("-debug")
+
 	if len(sys.argv) > 1:
 		playername = sys.argv[1]
 
 	hostname = "localhost"
 	if len(sys.argv) > 2:
 		hostname = sys.argv[2]
+
 
 	main = Main(playername, hostname)
 	print "starting..."
