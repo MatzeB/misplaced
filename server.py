@@ -72,6 +72,7 @@ class Server:
 			mapdata.players = oldmapdata.players
 		for player in mapdata.players.values():
 			player.reset()
+			mapdata.placePlayer(player)
 
 		data = mapdata.serialize()
 		print "Sending map (%d bytes)" % len(data)

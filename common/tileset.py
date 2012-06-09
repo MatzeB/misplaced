@@ -35,6 +35,7 @@ class TileSet:
 		TILE_H = 32
 		self.raft = 4
 		self.wood = 69
+		self.grass = 13
 		solid_tiles = [ 64, 66, 68, 69, 72, 73, 76, 77,
 			24, 25, 26,
 			28, 29, 30,

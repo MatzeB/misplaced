@@ -37,6 +37,23 @@ class Map:
 				result.append(b)
 		return result
 
+	def allGroundBlocks(self):
+		blocks = []
+		for x in range(self.blocks_horizontal):
+			for y in range(self.blocks_vertical):
+				if (not self.tileset.tiles[self.background[x][y].type].solid) and \
+				   self.blocks[x][y].type == 0:
+					   blocks.append(self.background[x][y])
+		return blocks
+
+	def placePlayer(self,player):
+		groundBlocks = self.allGroundBlocks()
+		s = randint(0,len(groundBlocks)-1)
+		block = groundBlocks[s]
+		player.position = block.getCenterPosition()
+		print player.position
+		player.isDirty = True
+
 	def getMapUpdate(self, deltatime):
 		mapupdate = MapUpdate(deltatime=deltatime)
 
@@ -58,21 +75,12 @@ class Map:
 		return mapupdate
 
 	def findNearestBlockAt(self, list, position):
-		result = None
-		
-		if position.x < 0 or position.x >= self.blocks_horizontal * TILE_WIDTH: return result
-		if position.y < 0 or position.y >= self.blocks_vertical * TILE_HEIGHT: return result
-
-		minDist = -1
 		x = int(position.x/TILE_WIDTH + 0.5)
 		y = int(position.y/TILE_HEIGHT + 0.5)
-		block = list[x][y]
-		dist = Vector.distance(block.getCenterPosition(), position)
-		if minDist == -1 or dist < minDist:
-			result = block
-			minDist = dist
-
-		return result
+		if x in list and y in list[x]:
+			return list[x][y]
+		else:
+			return None
 
 	def findPlayerAt(self, position, excluded=None):
 		minDist = 10000
