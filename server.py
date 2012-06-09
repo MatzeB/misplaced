@@ -19,7 +19,7 @@ SEND_INTERVALL = 0.1
 mapname = "data/test.stl"
 if len(sys.argv) > 1:
 	mapname = sys.argv[1]
-mapdata = parse_map(open(mapname))
+mapdata = None
 state = "warmup"
 startTime = None
 n_votebegin = 0
@@ -62,6 +62,20 @@ class Server:
 		self.s.setblocking(0)
 
 		self.clients = []
+		self.reloadMap()
+	
+	def reloadMap(self):
+		global mapdata
+		oldmapdata = mapdata
+		mapdata = parse_map(open(mapname))
+		if oldmapdata:
+			mapdata.players = oldmapdata.players
+		for player in mapdata.players.values():
+			player.reset()
+
+		data = mapdata.serialize()
+		print "Sending map (%d bytes)" % len(data)
+		self.sendall("mapdata " + data)
 
 	def sendall(self, text):
 		for client in self.clients:
@@ -157,6 +171,7 @@ if __name__ == "__main__":
 		server.sendall("state %s" % state)
 		if state == "game":
 			global startTime 
+			server.reloadMap()
 			startTime = time.time()
 
 	def gameupdate(server, dt):
