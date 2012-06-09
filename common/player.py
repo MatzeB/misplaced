@@ -1,3 +1,5 @@
+import time
+from rules import *
 from vector import *
 from block import BlockType
 from client.soundconstants import Sounds
@@ -45,6 +47,7 @@ class Player:
 		self.carrying = None
 		self.voted_begin = False
 		self.stunned = False
+		self.stunTimer = None
 		self.evil = None
 	
 	def stun(self):
@@ -52,6 +55,7 @@ class Player:
 			self.stunned = True
 			self.isDirty = True
 			self.currentInteraction = Interaction.NoInteraction
+			self.stunTimer = time.time()
 
 	def unStun(self):
 		if self.stunned:
@@ -154,6 +158,10 @@ class Player:
 			self.currentInteractionBlockType = None
 
 	def update(self, dt, collision_detector):
+
+		if self.stunned and self.stunTimer and time.time() > self.stunTimer + STUN_TIME:
+			self.unStun()
+
 		if self.velocity.getLength() < 0.01 and self.acceleration.getLength() < 0.01:
 			return
 
