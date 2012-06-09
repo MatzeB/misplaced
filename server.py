@@ -324,3 +324,8 @@ if __name__ == "__main__":
 		if dt > SEND_INTERVALL:
 			sendgameupdate(server, t - lastUpdateTime)
 			lastSendTime = t
+
+		wait = min(UPDATE_INTERVALL - (t - lastUpdateTime),
+				SEND_INTERVALL - (t - lastSendTime))
+		if wait > 0:
+			time.sleep(wait)
