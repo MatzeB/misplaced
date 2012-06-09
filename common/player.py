@@ -52,6 +52,7 @@ class Player:
 		self.currentInteractionBlockType = None
 		self.carrying = None
 		self.voted_begin = False
+		self.stunned = False
         
         def getTargetPosition(self):
 			direction = self.currentDirection
@@ -168,11 +169,12 @@ class Player:
 		self.currentDirection = data.currentDirection
 		self.currentInteraction = data.currentInteraction
 		self.currentInteractionBlockType = data.currentInteractionBlockType
-                self.carrying = data.carrying
+		self.carrying = data.carrying
+		self.stunned = data.stunned
 
 
 	def serialize(self):
-		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
 			self.id,
 			self.name,
 			self.visible,
@@ -184,7 +186,8 @@ class Player:
 			self.currentDirection,
 			self.currentInteraction,
 			self.currentInteractionBlockType,
-                        self.carrying
+			self.carrying,
+			self.stunned
 		)
 
 		return result
@@ -209,6 +212,6 @@ class Player:
 		else: result.currentInteractionBlockType = int(parts[10])
 		if parts[11] == "None": result.carrying = None
 		else: result.carrying = int(parts[11])
-
+		result.stunned = parts[12] == "True"
 
 		return result
