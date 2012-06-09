@@ -88,19 +88,18 @@ class Player:
 			pass
 
         def interaction_pickup_block(self, dt, block):
-                if self.carrying:
-                    if block.type == 0:
-                        block.type = self.carrying
-                        self.carrying = None
-                        block.isDirty = True
-                        self.isDirty = True
-                else:
-                    self.carrying = block.type
-                    block.type = 0
-                    block.isDirty = True
-                    self.isDirty = True
-                self.currentInteraction = Interaction.NoInteraction
-
+			if self.carrying:
+				if block.type == 0:
+					block.type = self.carrying
+					self.carrying = None
+					block.isDirty = True
+					self.isDirty = True
+			else:
+				self.carrying = block.type
+				block.type = 0
+				block.isDirty = True
+				self.isDirty = True
+			self.currentInteraction = Interaction.NoInteraction
 
 	def updateInteraction(self, dt, block):
 		if not block:
