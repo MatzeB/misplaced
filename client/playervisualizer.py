@@ -53,7 +53,9 @@ class PlayerVisualizer(Visualizer):
 
 	def getGraphicsKey(self, obj):
 		#print len(self.graphics)
-		if obj.velocity.getLength() > 0:
+		if obj.stunned:
+			return 5
+		elif obj.velocity.getLength() > 0:
 			return int(time.clock()*10%8+1)
 		else:
 			return 0
@@ -74,7 +76,10 @@ class PlayerVisualizer(Visualizer):
 				direction = obj.lastDirection
 			dirvector = direction_vectors[direction]
 
-			self.graphics = self.spriteset.getWalkAnimationSprites(direction)
+			if not obj.stunned:
+				self.graphics = self.spriteset.getWalkAnimationSprites(direction)
+			else:
+				self.graphics = self.spriteset.getStunnedSprites()
 
             # If the player moves up, draw carried things first
 			if self.getDirection(obj) == Direction.Up and obj.carrying:
