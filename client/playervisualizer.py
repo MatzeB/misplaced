@@ -45,11 +45,14 @@ class PlayerVisualizer(Visualizer):
 		else:
 			return 0
 
-	def getDirectionRotation(self, obj):
+	def getDirection(self, obj):
 		direction = obj.currentDirection
 		if direction == Direction.NoDir:
 			direction = obj.lastDirection
-		return direction2RoationMap[direction]
+		return direction
+	
+	def getDirectionRotation(self, obj):
+		return direction2RoationMap[self.getDirection(obj)]
 
 	def draw(self, offset, obj):
 		if obj.visible:
@@ -60,6 +63,10 @@ class PlayerVisualizer(Visualizer):
 
 			self.graphics = self.spriteset.getWalkAnimationSprites(direction)
 
+            # If the player moves up, draw carried things first
+			if self.getDirection(obj) == Direction.Up and obj.carrying:
+				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
+
 			# move player image...
 			Visualizer.draw(self, offset + Vector(16,0), obj, rotation=0)#self.getDirectionRotation(obj))
 
@@ -68,7 +75,7 @@ class PlayerVisualizer(Visualizer):
 			pygl2d.draw.circle(
 				(obj.getTargetPosition() + offset).toIntArr(),
 				8, (255,0,0), 100)
-			if obj.carrying:
+			if self.getDirection(obj) != Direction.Up and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 	
 	def clientUpdate(self, dt, obj):
