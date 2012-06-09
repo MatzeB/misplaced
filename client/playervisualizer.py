@@ -1,8 +1,10 @@
 import time
 from libs import pygl2d
+from libs.pygl2d.font import RenderText
 from visualizer import *
 from blockvisualizer import *
 from common.player import *
+from pygame.color import Color
 
 direction2RoationMap = {
 	Direction.NoDir: 0,
@@ -34,6 +36,11 @@ class PlayerVisualizer(Visualizer):
 		self.graphics = self.spriteset.getWalkAnimationSprites(Direction.Up)
 
 		self.carriedblockvisualizer = CarriedBlock(tileset)
+
+		self.nameCache = {}
+		fontname = pygame.font.get_default_font()
+		self.font = pygame.font.Font(fontname, 14)
+		
 
 	def getPosition(self, obj):
 		return obj.position
@@ -80,6 +87,15 @@ class PlayerVisualizer(Visualizer):
 				8, (255,0,0), 100)
 			if self.getDirection(obj) != Direction.Up and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
+
+			self.drawName(offset, obj)
+
+	def drawName(self, offset, obj):
+		if not self.nameCache.has_key(obj.name):
+			self.nameCache[obj.name] = RenderText(obj.name, Color("green"), self.font)
+
+		textImg = self.nameCache[obj.name]
+		textImg.draw(obj.position + offset + Vector(-textImg.get_width()/2+16, -32))
 	
 	def clientUpdate(self, dt, obj):
 		Visualizer.clientUpdate(self, dt, obj)

@@ -18,7 +18,7 @@ from libs.pygl2d.font import RenderText
 PING_INTERVALL = 3.0
 
 class Main:
-	def __init__(self, hostname):
+	def __init__(self, playername, hostname):
 		self.screen = None
 		self.screenDim = Vector(800,576)
 		self.background = (255,255,255)
@@ -32,7 +32,7 @@ class Main:
 		self.lastPingTime = time.clock()
 		self.lastPongTime = time.clock()
 
-		self.playername = "Player_" + str(int(100 * random()))
+		self.playername = playername or "Player_" + str(int(100 * random()))
 		self.playerid = None
 		
 		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced")
@@ -219,11 +219,15 @@ class Main:
 				self.sendPing()
 
 if __name__ == '__main__':
-	hostname = "localhost"
+	playername = None
 	if len(sys.argv) > 1:
-		hostname = sys.argv[1]
+		playername = sys.argv[1]
 
-	main = Main(hostname)
+	hostname = "localhost"
+	if len(sys.argv) > 2:
+		hostname = sys.argv[2]
+
+	main = Main(playername, hostname)
 	print "starting..."
 	main.run()
 	print "shuting down..."
