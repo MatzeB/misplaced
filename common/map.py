@@ -4,10 +4,11 @@ from player import *
 from common.vector import *
 
 class Map:
-	def __init__(self, blocks_horizontal, blocks_vertical):
+	def __init__(self, blocks_horizontal, blocks_vertical, tileset):
 		self.blocks = {}
 		self.background = {}
 		self.players = {}
+		self.tileset = tileset
 
 		self.width = blocks_horizontal * 32
 		self.blocks_horizontal = blocks_horizontal
@@ -148,8 +149,8 @@ class Map:
 		strblocks_background = parts[2].split("/")
 		strblocks_blocks = parts[3].split("/")
 		strplayers = parts[4].split("/")
-		
-		result = Map(int(parts[0]), int(parts[1]))
+	
+		result = Map(int(parts[0]), int(parts[1]), None)
 
 		for b in strblocks_background:
 			if len(b.strip()) > 0:
@@ -167,6 +168,33 @@ class Map:
 				result.players[player.id] = player
 
 		return result
+
+	def check_winning_condition(self):
+		# Check if there is an "SOS" made out of wood on the map
+		pattern = [
+			1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1,
+			1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0,
+			1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1,
+			0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1,
+			1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1,
+		]
+		pattern_width = 11
+		pattern_height = len(pattern)/pattern_width
+
+		for y in range(self.blocks_vertical - pattern_height-1):
+			for x in range(self.blocks_horizontal - pattern_width-1):
+				found = True
+				for py in range(pattern_height):
+					if not found:
+						break
+					for px in range(pattern_width):
+						is_wood   = self.blocks[x+px][y+py].type == self.tileset.wood
+						need_wood = pattern[py*pattern_width + px] != 0
+						if is_wood != need_wood:
+							found = False
+							break
+				if found:
+					return True
 
 class MapUpdate:
 	def __init__(self, blocks=None, background=None, players=None):
@@ -219,4 +247,5 @@ class MapUpdate:
 				result.players.append(Player.deserialize(p))
 
 		return result
+
 

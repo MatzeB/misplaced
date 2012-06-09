@@ -11,6 +11,7 @@ class MapVisualizer:
 		self.screenDim = screenDim
 
 		self.tileset = TileSet("data/tiles.png", 16, 16)
+		self.map.tileset = self.tileset
 		self.blockvisualizer = BlockVisualizer(self.tileset)
 		self.playervisualizer = PlayerVisualizer(
                         self.tileset,

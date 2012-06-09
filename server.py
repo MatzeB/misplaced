@@ -144,6 +144,10 @@ if __name__ == "__main__":
 
 	def gameupdate(server, dt):
 		mapdata.update(dt)
+		game_is_won = mapdata.check_winning_condition()
+		if game_is_won:
+			print "You created the SOS, help will be here soon"
+			server.sendall("abort")
 
 	def sendgameupdate(server):
 		mapupdate = mapdata.getMapUpdate()

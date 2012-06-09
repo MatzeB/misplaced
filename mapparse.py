@@ -1,6 +1,7 @@
 import re
 import sys
 from common.map import Map
+from common.tileset import TileSet
 
 def ident(scanner, token): return token
 def number(scanner, token):
@@ -96,7 +97,8 @@ def parse_map(input):
 				(width,height,tiles) = parse_tilemap()
 
 				if map == None:
-					map = Map(width, height)
+					tileset = TileSet(None, 16, 16)
+					map = Map(width, height, tileset)
 					map.generate()
 					dest = map.background
 				else:
