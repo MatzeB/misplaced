@@ -47,8 +47,8 @@ class Map:
 		if position.y < 0 or position.y >= self.blocks_vertical * TILE_HEIGHT: return result
 
 		minDist = -1
-		ix = int(position.x/TILE_WIDTH)
-		iy = int(position.y/TILE_HEIGHT)
+		ix = int(position.x/TILE_WIDTH + 0.5)
+		iy = int(position.y/TILE_HEIGHT + 0.5)
 		for x in range(ix, ix+1):
 			for y in range(iy, iy+1):
 				block = list[x][y]
