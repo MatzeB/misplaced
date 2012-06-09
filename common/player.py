@@ -25,6 +25,14 @@ direction_vectors = [
 	Vector( 0,  1),
 ]
 
+target_distance = [
+    0, # NoDir
+    16,
+    16,
+    16,
+    16,
+]
+
 class Player:
 
 	def __init__(self, onClient, id="", x=0, y=0):
@@ -50,7 +58,7 @@ class Player:
 			if direction == Direction.NoDir:
 				direction = self.lastDirection
 			dirvector = direction_vectors[direction]
-			targetpos = self.position + Vector(16,16) + dirvector * 16
+			targetpos = self.position + Vector(16,16) + dirvector * target_distance[direction]
 			return targetpos
 
 
