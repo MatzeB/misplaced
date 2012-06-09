@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import pygame, os, sys, time
+import pygame.font
+from pygame.color import Color
 
 from libs import pygl2d
 
@@ -11,6 +13,7 @@ from client.mapvisualizer import *
 from client.client import *
 from client.networkconstants import *
 from mapparse import parse_map
+from libs.pygl2d.font import RenderText
 
 PING_INTERVALL = 3.0
 
@@ -22,6 +25,9 @@ class Main:
 		self.running = False
 		self.showFPS = True
 
+		self.current_state = "warmup"
+		self.attitude = "unknown"
+
 		self.packetTime = 1/30.0
 		self.lastPingTime = time.clock()
 		self.lastPongTime = time.clock()
@@ -31,8 +37,10 @@ class Main:
 		
 		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced")
 
-		self.font = pygame.font.SysFont("Courier New", 32, bold=True)
-		self.fontColor = (0, 0, 0)
+		pygame.font.init()
+		fontname = pygame.font.get_default_font()
+		self.font = pygame.font.Font(fontname, 32)
+		self.statetext = RenderText("", Color("red"), self.font)
 
 		self.networkClient = Client(hostname)
 
@@ -43,6 +51,8 @@ class Main:
 		self.networkClient.welcome = self.welcomeMessage
 		self.networkClient.pong = self.pong
 		self.networkClient.left = self.playerLeft
+		self.networkClient.state = self.state
+		self.networkClient.attitude = self.change_attitude
 
 		self.map = None
 
@@ -61,6 +71,23 @@ class Main:
 
 	def welcomeMessage(self, id):
 		self.playerid = id
+
+	def state(self, newstate):
+		self.current_state = newstate
+		if self.current_state == "warmup":
+			self.statetext.change_text("Warmup, press F3 when ready")
+		elif self.current_state == "won":
+			self.statetext.change_text("Finished")
+		elif self.current_state == "game":
+			self.statetext.change_text("You are %s" % self.attitude)
+		else:
+			print "Unknown gmae state '%s'" % newstate
+			self.statetext.change_text("Unknown state")
+
+	def change_attitude(self, newattitude):
+		self.attitude = newattitude
+		# Update info text
+		self.state(self.current_state)
 
 	def mapUpdate(self, strmapdata):
 		# Assume the server just sent us a filename
@@ -117,6 +144,8 @@ class Main:
                                 elif e.key == pygame.K_RETURN:
                                         self.networkClient.send(NetworkCommand.Player_Command_PickUp, True)
                                         self.player_interact(Interaction.PickUp, True)
+				elif e.key == pygame.K_F3:
+					self.networkClient.send("votebegin")
  
 			
 			elif e.type == pygame.KEYUP:
@@ -159,6 +188,10 @@ class Main:
 			self.map.draw()
 		elif not self.networkClient.connected:
 			pass # todo draw waiting for server message
+
+		self.statetext.draw(self.screenDim
+				- Vector(self.statetext.get_width() + 13,
+		                 self.statetext.get_height() + 13))
 
 		pygl2d.window.end_draw()
 	

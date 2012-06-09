@@ -42,7 +42,7 @@ class Player:
 		self.currentInteraction = Interaction.NoInteraction
 		self.currentInteractionBlockType = None
 		self.carrying = None
-
+		self.voted_begin = False
         
         def getTargetPosition(self):
 	    direction = self.currentDirection
