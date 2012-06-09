@@ -21,10 +21,14 @@ Dann geben die Suchtrupps auf.
 PvP: Wenn man jemanden verdächtigt dass er sabotiert um zu bleiben, kann man ihn festhalten. Damit sind dann beide Spieler unfähig etwas zu tun...
 
 
+Last 2 h TODOs:
+---------------
 
-
-
-
+ * Spieler benamsen
+ * Timer für Spielende
+ * Spielende anzeigen
+ * Spieler auflösen
+ * Karte schön machen
 
 
 
