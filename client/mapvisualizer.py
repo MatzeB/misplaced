@@ -12,7 +12,9 @@ class MapVisualizer:
 
 		self.tileset = make_tileset("data/tiles.png", 16, 16)
 		self.blockvisualizer = BlockVisualizer(self.tileset)
-		self.playervisualizer = PlayerVisualizer([
+		self.playervisualizer = PlayerVisualizer(
+                        self.tileset,
+                        [
 			"client/graphics/player_0.png",
 			"client/graphics/player_1.png"
 		])

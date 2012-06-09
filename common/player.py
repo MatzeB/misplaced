@@ -148,10 +148,11 @@ class Player:
 		self.currentDirection = data.currentDirection
 		self.currentInteraction = data.currentInteraction
 		self.currentInteractionBlockType = data.currentInteractionBlockType
+                self.carrying = data.carrying
 
 
 	def serialize(self):
-		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
 			self.id,
 			self.name,
 			self.visible,
@@ -162,7 +163,8 @@ class Player:
 			self.lastDirection,
 			self.currentDirection,
 			self.currentInteraction,
-			self.currentInteractionBlockType
+			self.currentInteractionBlockType,
+                        self.carrying
 		)
 
 		return result
@@ -185,5 +187,8 @@ class Player:
 		result.currentInteraction = int(parts[9])
 		if parts[10] == "None": result.currentInteractionBlockType = None
 		else: result.currentInteractionBlockType = int(parts[10])
+		if parts[11] == "None": result.carrying = None
+		else: result.carrying = int(parts[11])
+
 
 		return result
