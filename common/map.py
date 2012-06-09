@@ -49,11 +49,11 @@ class Map:
 		minDist = -1
 		x = int(position.x/TILE_WIDTH + 0.5)
 		y = int(position.y/TILE_HEIGHT + 0.5)
-                block = list[x][y]
-                dist = Vector.distance(block.getCenterPosition(), position)
-                if minDist == -1 or dist < minDist:
-                        result = block
-                        minDist = dist
+		block = list[x][y]
+		dist = Vector.distance(block.getCenterPosition(), position)
+		if minDist == -1 or dist < minDist:
+			result = block
+			minDist = dist
 
 		return result
 
