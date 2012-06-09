@@ -80,7 +80,6 @@ class Player:
 
         def interaction_pickup_block(self, dt, block):
                 if self.carrying:
-                    print block.type
                     if block.type == 0:
                         block.type = self.carrying
                         self.carrying = None
