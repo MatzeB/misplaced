@@ -13,6 +13,7 @@ from common.vector import *
 from client.mapvisualizer import *
 from client.client import *
 from client.networkconstants import *
+from client.soundconstants import *
 from mapparse import parse_map
 from libs.pygl2d.font import RenderText
 
@@ -206,8 +207,7 @@ class Main:
 	def playMusic(self):
 		pass
 		if not pygame.mixer.music.get_busy():
-			pass
-			#Sounds.music.play()
+			Sounds.music.play()
 	
 	def initSound(self):
 		try: #changed
@@ -225,6 +225,7 @@ class Main:
 	# ====================================================================================================
 	
 	def update(self, dt):
+		self.playMusic()
 		if self.map:
 			self.map.clientUpdate(dt)
 		self.updateStateText()
@@ -253,6 +254,7 @@ class Main:
 		
 		self.running = True
 		clock = pygame.time.Clock()
+		self.initSound()
 		while self.running:
 			dt = clock.tick(30) / 1000.0
 
