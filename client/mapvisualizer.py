@@ -3,6 +3,7 @@ from playervisualizer import *
 from common.vector import *
 from common.block import *
 from common.tileset import TileSet
+from libs import pygl2d
 
 class MapVisualizer:
 	def __init__(self, mapdata, playerid, screenDim):
@@ -48,6 +49,19 @@ class MapVisualizer:
 
 		for id,player in self.map.players.iteritems():
 			self.playervisualizer.draw(self.currentOffset, player)
+
+                        # Debug highlighting
+                        block = self.map.getTargetBlock(
+                                self.map.background,
+                                player.position,
+                                player.currentDirection,
+                        )
+                        pygl2d.draw.rect(
+                            	(block.x * self.blockvisualizer.blockWidth + self.currentOffset.x - TILE_WIDTH/2,
+				 block.y * self.blockvisualizer.blockHeight + self.currentOffset.y - TILE_HEIGHT/2,
+				 TILE_WIDTH,
+				 TILE_HEIGHT),
+				(255,0,0), alpha=100)
 
 	def clientUpdate(self, dt):
 		for x in range(self.map.blocks_horizontal):
