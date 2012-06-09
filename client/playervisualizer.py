@@ -99,7 +99,7 @@ class PlayerVisualizer(Visualizer):
 			img = self.goodAttitudeImage
 			if obj.evil:
 				img = self.evilAttitudeImage
-			img.draw(obj.position + offset + Vector(-textImg.get_width()/2, -20))
+			img.draw(obj.position + offset + Vector(-img.get_width()/2, -20))
 
 	
 	def clientUpdate(self, dt, obj, colldet):
