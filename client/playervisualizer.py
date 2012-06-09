@@ -41,7 +41,7 @@ class PlayerVisualizer(Visualizer):
 	def getGraphicsKey(self, obj):
 		#print len(self.graphics)
 		if obj.velocity.getLength() > 0:
-			return int(time.clock()*10%7+1)
+			return int(time.clock()*10%8+1)
 		else:
 			return 0
 
