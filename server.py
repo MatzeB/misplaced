@@ -234,6 +234,7 @@ if __name__ == "__main__":
 		player = Player(str(client.id), randint(0,mapdata.width), randint(0,mapdata.height))
 		player.client = client
 		mapdata.addPlayer(player)
+		mapdata.placePlayer(player)
 		client.player = player
 
 	def left(client):
