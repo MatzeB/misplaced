@@ -70,9 +70,3 @@ class RenderText(object):
         
         return self.ren.get_height()*self.ren.scalar
     
-    def get_rect(self):
-        """Get the rect of the font rendered image. <- return rect.Rect
-        """
-        
-        return rect.Rect(0, 0, self.get_width(), self.get_height())
-

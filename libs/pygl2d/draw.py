@@ -7,23 +7,6 @@ from math import *
 
 import window
 
-def flip_points(points):
-    """Flips the Y coordinates in a set of points <- return new points list.
-    """
-    
-    lowest = 0
-    highest = 0
-    for p in points:
-        if p[1] <= lowest:
-            lowest = p[1]
-        elif p[1] >= highest:
-            highest = p[1]
-    height = highest - lowest
-    new = []
-    for p in points:
-        new.append([p[0], (highest + p[1]) - height])
-    return new
-
 def line(point1, point2, color, width=1, aa=True, alpha=255.0):
     """Draw a line from point1 to point2 <- return None
     """
@@ -34,14 +17,13 @@ def line(point1, point2, color, width=1, aa=True, alpha=255.0):
     glDisable(GL_TEXTURE_2D)
     glColor4f(color[0]/255.0, color[1]/255.0, color[2]/255.0, alpha/255.0)
     glBegin(GL_LINE_STRIP)
-    offset = window.get_size()[1]
-    glVertex3f(point1[0], offset - point1[1], 0)
-    glVertex3f(point2[0], offset - point2[1], 0)
+    glVertex3f(point1[0], point1[1], 0)
+    glVertex3f(point2[0], point2[1], 0)
     glEnd()
     glColor3f(1.0,1.0,1.0)
     glEnable(GL_TEXTURE_2D)
     
-def lines(points, color, width=1, aa=True, closed=0, alpha=255.0):
+def lines(points, color, width=1, aa=True, closed=False, alpha=255.0):
     """Draws a series of lines <- return None
     """
     
@@ -51,12 +33,10 @@ def lines(points, color, width=1, aa=True, closed=0, alpha=255.0):
     glDisable(GL_TEXTURE_2D)
     glBegin(GL_LINE_STRIP)
     glColor4f(color[0]/255.0, color[1]/255.0, color[2]/255.0, alpha/255.0)
-    offset = window.get_size()[1]
-    points = flip_points(points)
     for p in points:
-        glVertex3f(p[0], offset - p[1], 0)
+        glVertex3f(p[0], p[1], 0)
     if closed:
-        glVertex3f(points[0][0], offset - points[0][1], 0)
+        glVertex3f(points[0][0], points[0][1], 0)
     glEnd()
     glColor3f(1.0,1.0,1.0)
     glDisable(GL_LINE_SMOOTH)
@@ -71,10 +51,8 @@ def polygon(points, color, aa=True, alpha=255.0):
         glEnable(GL_POLYGON_SMOOTH)
     glBegin(GL_POLYGON)
     glColor4f(color[0]/255.0, color[1]/255.0, color[2]/255.0, alpha/255.0)
-    offset = window.get_size()[1]
-    points = flip_points(points)
     for p in points:
-        glVertex3f(p[0], offset - p[1], 0)
+        glVertex3f(p[0], p[1], 0)
     glEnd()
     glColor3f(1.0,1.0,1.0)
     glDisable(GL_POLYGON_SMOOTH)
@@ -86,8 +64,6 @@ def rect(rectstyle, color, width=0, alpha=255.0):
    
     x, y, w, h = rectstyle
     points = [[x, y], [x+w, y], [x+w, y+h], [x, y+h]]
-    points = flip_points(points)
-    offset = window.get_size()[1]
     if not width:
         polygon(points, color, aa=False, alpha=alpha)
     else:
@@ -96,8 +72,6 @@ def rect(rectstyle, color, width=0, alpha=255.0):
 def circle(pos, radius, color, alpha=255.0):
     """Draw a circle <- return None
     """
-    win_size = window.get_size()
-    
     w, x, y = color
     w = w / 255.0 if w else 0
     x = x / 255.0 if x else 0
@@ -108,7 +82,7 @@ def circle(pos, radius, color, alpha=255.0):
     c = gluNewQuadric()
     glColor4f(w, x, y, z)
     glPushMatrix()
-    glTranslatef(pos[0], win_size[1] - pos[1], 0)
+    glTranslatef(pos[0], pos[1], 0)
     gluDisk(c, 0, radius, 100, 100)
     glPopMatrix()
     glEnable(GL_TEXTURE_2D)

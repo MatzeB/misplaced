@@ -108,9 +108,6 @@ class Image:
         self.height = self.h = image.get_height()
         self.size = image.get_size()
    
-        self.win_size = window.get_size()
-                   
-            
         #image mods
         self.rotation = 0
         self.scalar = 1.0
@@ -122,10 +119,10 @@ class Image:
         glNewList(self.dl, GL_COMPILE)
         glBindTexture(GL_TEXTURE_2D, self.texture)
         glBegin(GL_QUADS)
-        glTexCoord2f(0, 1-fracH); glVertex3f(-self.width/2.0,-self.height/2.0,0)
-        glTexCoord2f(fracW, 1-fracH); glVertex3f( self.width/2.0,-self.height/2.0,0)
-        glTexCoord2f(fracW, 1.0); glVertex3f( self.width/2.0, self.height/2.0,0)
-        glTexCoord2f(0, 1.0); glVertex3f(-self.width/2.0, self.height/2.0,0)
+        glTexCoord2f(0, 1.); glVertex3f(-self.width/2.0,-self.height/2.0,0)
+        glTexCoord2f(fracW, 1.); glVertex3f( self.width/2.0,-self.height/2.0,0)
+        glTexCoord2f(fracW, 1.-fracH); glVertex3f( self.width/2.0, self.height/2.0,0)
+        glTexCoord2f(0, 1.-fracH); glVertex3f(-self.width/2.0, self.height/2.0,0)
         glEnd()
         glEndList()
     
@@ -175,8 +172,7 @@ class Image:
         if not rotation: rotation = self.rotation
 
         glPushMatrix()
-        #print pos[0]+self.ox, self.win_size[1] - pos[1] - self.oy
-        glTranslatef(pos[0]+self.ox, self.win_size[1] - pos[1] - self.oy, 0)
+        glTranslatef(pos[0]+self.ox, pos[1] - self.oy, 0)
         glColor4f(*self.color)
         glRotatef(rotation, 0, 0, 1)
         glScalef(self.scalar, self.scalar, self.scalar)
@@ -185,7 +181,7 @@ class Image:
 
     def draw_part(self, (x, y), (left, top, right, bottom)):
         glPushMatrix()
-        glTranslatef(x+self.ox, self.win_size[1] - y - self.oy, 0)
+        glTranslatef(x+self.ox, y - self.oy, 0)
         glColor4f(*self.color)
         glRotatef(self.rotation, 0, 0, 1)
         glScalef(self.scalar, self.scalar, self.scalar)
@@ -194,8 +190,8 @@ class Image:
         glBegin(GL_QUADS)
         l = left/float(self.w)
         r = right/float(self.w)
-        t = 1. - top/float(self.h)
-        b = 1. - bottom/float(self.h)
+        b = 1. - top/float(self.h)
+        t = 1. - bottom/float(self.h)
         w = (right-left)/2.0
         h = (bottom-top)/2.0
         glTexCoord2f(l, b); glVertex3f(-w,-h,0)

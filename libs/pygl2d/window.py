@@ -30,14 +30,11 @@ def begin_draw():
     """
     
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-    glLoadIdentity()
-    enable2D((0, SCREEN_SIZE[0], 0, SCREEN_SIZE[1]))
+    enable2D( (0, SCREEN_SIZE[0], 0, SCREEN_SIZE[1]) )
 
 def end_draw():
     """End drawing <- return None
     """
-    
-    disable2D()
     pygame.display.flip()
 
 def get_size():
@@ -67,15 +64,8 @@ def init_gl(bg):
     
 def enable2D(rect):
     glMatrixMode(GL_PROJECTION)
-    glPushMatrix()
     glLoadIdentity()
-    glOrtho(rect[0],rect[0]+rect[1],rect[2],rect[2]+rect[3], -1, 1)
+    glOrtho(rect[0],rect[0]+rect[1],rect[2]+rect[3],rect[2], -1, 1)
     glMatrixMode(GL_MODELVIEW)
-    glPushMatrix()
     glLoadIdentity()
 
-def disable2D():
-    glMatrixMode(GL_PROJECTION)
-    glPopMatrix()
-    glMatrixMode(GL_MODELVIEW)
-    glPopMatrix()
