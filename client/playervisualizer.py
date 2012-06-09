@@ -6,6 +6,7 @@ from blockvisualizer import *
 from common.player import *
 from pygame.color import Color
 from math import *
+from debug import DEBUG
 
 direction2RoationMap = {
 	Direction.NoDir: 0,
@@ -56,7 +57,7 @@ class PlayerVisualizer(Visualizer):
 		if obj.stunned:
 			return 5
 		elif obj.velocity.getLength() > 1:
-			return int(time.clock()*10%8+1)
+			return int(time.time()*10%8+1)
 		else:
 			return 0
 
@@ -93,9 +94,10 @@ class PlayerVisualizer(Visualizer):
 
 			targetpos = obj.position + Vector(16,16) + dirvector * 16 + offset
 
-			pygl2d.draw.circle(
-				(obj.getTargetPosition() + offset).toIntArr(),
-				8, (255,0,0), 100)
+			if DEBUG:
+				pygl2d.draw.circle(
+					(obj.getTargetPosition() + offset).toIntArr(),
+					8, (255,0,0), 100)
 			if self.getDirection(obj) != Direction.Up and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 
@@ -112,7 +114,7 @@ class PlayerVisualizer(Visualizer):
 			img = self.goodAttitudeImage
 			if obj.evil:
 				img = self.evilAttitudeImage
-			#img.rotate(15)# + sin(time.clock()*100%(2*pi))*10)
+			#img.rotate(15)# + sin(time.time()*100%(2*pi))*10)
 			img.draw(obj.position + offset + Vector(-textImg.get_width()/2+16, -20))
 
 	

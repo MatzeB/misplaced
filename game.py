@@ -37,8 +37,8 @@ class Main:
 		self.lastWinner = None
 
 		self.packetTime = 1/30.0
-		self.lastPingTime = time.clock()
-		self.lastPongTime = time.clock()
+		self.lastPingTime = time.time()
+		self.lastPongTime = time.time()
 
 		self.playername = playername or "Player_" + str(int(100 * random()))
 		self.playerid = None
@@ -71,11 +71,11 @@ class Main:
 	# ====================================================================================================
 
 	def sendPing(self):
-		self.lastPingTime = time.clock()
+		self.lastPingTime = time.time()
 		self.networkClient.send(NetworkCommand.Ping, self.lastPingTime)
 
 	def pong(self, number):
-		t = time.clock()
+		t = time.time()
 		self.packetTime = (t - self.lastPingTime)/2.0
 		self.lastPongTime = t
 
@@ -87,7 +87,7 @@ class Main:
 		if self.map:
 			self.map.setCurrentState(self.current_state)
 		if self.current_state == "game":
-			self.startTime = time.clock()
+			self.startTime = time.time()
 
 	def winner(self, newWinner):
 		self.lastWinner = newWinner
@@ -100,21 +100,21 @@ class Main:
 		player = None
 		if self.map and self.map.map.players.has_key(self.playerid):
 			player = self.map.map.players[self.playerid]
-
-		if self.current_state == "warmup":
-			if self.lastWinner:
-				self.centertext1.change_text("The %s team has won!" % self.lastWinner)
-			if not player.voted_begin:
-				self.centertext2.change_text("Warmup, press F3 when ready!")
-		else:
-			text = ""
-			if player.evil is not None:
-				if player.evil:
-					text += "You are evil. "
-				else:
-					text += "You are nice. "
-			text += "%.0fs left." % (ROUND_TIME + self.startTime - time.clock())
-			self.statetext.change_text(text)
+		if player:
+			if self.current_state == "warmup":
+				if self.lastWinner:
+					self.centertext1.change_text("The %s team has won!" % self.lastWinner)
+				if not player.voted_begin:
+					self.centertext2.change_text("Warmup, press F3 when ready!")
+			else:
+				text = ""
+				if player.evil is not None:
+					if player.evil:
+						text += "You are evil. "
+					else:
+						text += "You are nice. "
+				text += "%.0fs left." % (ROUND_TIME + self.startTime - time.time())
+				self.statetext.change_text(text)
 
 	def mapUpdate(self, strmapdata):
 		# Assume the server just sent us a filename
@@ -271,7 +271,7 @@ class Main:
 			self.update(dt)
 			self.draw()
 
-			if (time.clock() - self.lastPongTime) > PING_INTERVALL:
+			if (time.time() - self.lastPongTime) > PING_INTERVALL:
 				self.sendPing()
 
 if __name__ == '__main__':

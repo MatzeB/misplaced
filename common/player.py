@@ -43,7 +43,7 @@ class Player:
 		self.visible = False
 		self.isDirty = False
 		self.targetposition = None
-		self.position = Vector(0,0)
+		self.position = Vector(96,96)
 		self.velocity = Vector(0,0)
 		self.acceleration = Vector(0,0)
 		self.movementAcceleration = 100
@@ -110,19 +110,19 @@ class Player:
 			#print block.type
 			pass
 
-        def interaction_pickup_block(self, dt, block):
-			if self.carrying:
-				if block.type == 0:
-					block.type = self.carrying
-					self.carrying = None
-					block.isDirty = True
-					self.isDirty = True
-			else:
-				self.carrying = block.type
-				block.type = 0
+	def interaction_pickup_block(self, dt, block):
+		if self.carrying:
+			if block.type == 0:
+				block.type = self.carrying
+				self.carrying = None
 				block.isDirty = True
 				self.isDirty = True
-			self.currentInteraction = Interaction.NoInteraction
+		else:
+			self.carrying = block.type
+			block.type = 0
+			block.isDirty = True
+			self.isDirty = True
+		self.currentInteraction = Interaction.NoInteraction
 
 	def updateInteraction(self, dt, block):
 		if not block:
@@ -134,9 +134,9 @@ class Player:
 			
 			#if block.type == BlockType.Dirt:
 			self.interaction_destroy_dirt(dt, block)
-                elif self.currentInteraction == Interaction.PickUp:
-                        self.currentInteractionBlockType = block.type
-                        self.interaction_pickup_block(dt, block)
+		elif self.currentInteraction == Interaction.PickUp:
+			self.currentInteractionBlockType = block.type
+			self.interaction_pickup_block(dt, block)
 		else:
 			self.currentInteractionBlockType = None
 
