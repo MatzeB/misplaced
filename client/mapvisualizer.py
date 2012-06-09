@@ -34,7 +34,6 @@ class MapVisualizer:
 		self.map.incrementalUpdate(mapupdate, pakettime)
 
 	def draw(self):
-		#print self.currentOffset
 		for x in range(self.map.blocks_horizontal):
 			if (x * self.blockvisualizer.blockWidth) < -self.currentOffset.x - TILE_WIDTH/2: continue
 			if (x * self.blockvisualizer.blockWidth) > -self.currentOffset.x + self.screenDim.x + TILE_WIDTH/2: continue
@@ -46,17 +45,14 @@ class MapVisualizer:
 				background_block = self.map.background[x][y]
 				if background_block.type != 0:
 					self.blockvisualizer.draw(self.currentOffset, background_block)
-					if self.tileset[background_block.type].solid and False:
+					if self.tileset[background_block.type].solid and DEBUG:
 						bbox = background_block.boundingBox()
 						bbox = (
 							bbox[0] + self.currentOffset.x,
 							bbox[1] + self.currentOffset.y,
 							bbox[2]-bbox[0],
 							bbox[3]-bbox[1],)
-						assert(bbox[2] == 32 and bbox[3] == 32)
 						pygl2d.draw.rect(bbox, (255, 255, 0), alpha=100)
-						pygl2d.draw.rect((32., int(bbox[1]), 32., 32.), (255, 255, 0), alpha=100)
-						pygl2d.draw.rect((150., 150., 32., 32.), (255, 255, 0), alpha=100)
 				solid_block = self.map.blocks[x][y]
 				if solid_block.type != 0:
 					self.blockvisualizer.draw(self.currentOffset, solid_block)
