@@ -68,7 +68,10 @@ class PlayerVisualizer(Visualizer):
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 
 			# move player image...
-			Visualizer.draw(self, offset + Vector(16,5), obj, rotation=0)#self.getDirectionRotation(obj))
+			rot = 0
+			if obj.stunned:
+				rot = 180
+			Visualizer.draw(self, offset + Vector(16,5), obj, rotation=rot)#self.getDirectionRotation(obj))
 
 			targetpos = obj.position + Vector(16,16) + dirvector * 16 + offset
 
