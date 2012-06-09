@@ -5,6 +5,7 @@ from sys import exit
 from random import *
 from common.map import *
 from common.player import *
+from common.rules import *
 from mapparse import parse_map
 
 HOST = ''
@@ -17,6 +18,7 @@ SEND_INTERVALL = 0.1
 mapname = "data/test.stl"
 mapdata = parse_map(open(mapname))
 state = "warmup"
+startTime = None
 n_votebegin = 0
 
 class Client:
@@ -146,13 +148,28 @@ if __name__ == "__main__":
 		mapupdate = MapUpdate(players=[client.player])
 		sendMapUpdate(mapupdate)
 
+	def setGameState(server, newState):
+		global state
+		state = newState
+		server.sendall("state %s" % state)
+		if state == "game":
+			global startTime 
+			startTime = time.clock()
+
 	def gameupdate(server, dt):
+		global state
 		mapdata.update(dt)
-		game_is_won = mapdata.check_winning_condition()
-		if game_is_won:
-			print "You created the SOS, help will be here soon"
-			server.sendall("winner nice")
-			server.sendall("state warmup")
+		if state == "game":
+			game_is_won = mapdata.check_winning_condition()
+			if game_is_won:
+				print "You created the SOS, help will be here soon"
+				server.sendall("winner nice")
+				setGameState(server, "warmup")
+			game_is_lost = check_losing_condition()
+			if game_is_lost:
+				print "You ran out of time, help will be here soon"
+				server.sendall("winner evil")
+				setGameState(server, "warmup")
 
 	def sendgameupdate(server, deltatime):
 		mapupdate = mapdata.getMapUpdate(deltatime)
@@ -231,6 +248,8 @@ if __name__ == "__main__":
 
 	def startround():
 		global server
+		global n_votebegin
+
 		# Decide which players are 'evil'
 		nice_players = list(mapdata.players.values())
 		n_evil = len(nice_players)/4
@@ -239,16 +258,22 @@ if __name__ == "__main__":
 			evil = nice_players[s]
 			nice_players.remove[evil]
 			evil.evil = True
-			evil.isDirty = True
 
 		for nice in nice_players:
 			nice.evil = False
-			nice.isDirty = True
 
-		server.startTime = time.clock()
-		server.sendall("state game")
-		server.sendall("starttime %f" % server.startTime)
+		for player in mapdata.players.values():
+			player.voted_begin = False
+			player.isDirty = True
+		n_votebegin = 0
+
+		setGameState(server, "game")
 		print "Round begins"
+	
+	def check_losing_condition():
+		global server
+		if startTime:
+			return time.clock() > startTime + ROUND_TIME
 
 	def votebegin(client, text):
 		global n_votebegin

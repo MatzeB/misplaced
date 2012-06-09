@@ -53,7 +53,6 @@ class Main:
 		self.networkClient.pong = self.pong
 		self.networkClient.left = self.playerLeft
 		self.networkClient.state = self.state
-		self.networkClient.starttime = self.starttime
 
 		self.map = None
 
@@ -77,10 +76,8 @@ class Main:
 		self.current_state = newstate
 		if self.map:
 			self.map.setCurrentState(self.current_state)
-		self.updateStateText()
-	
-	def starttime(self, time):
-		self.startTime = float(time)
+		if self.current_state == "game":
+			self.startTime = time.clock()
 	
 	def updateStateText(self):
 		text = ""
@@ -90,15 +87,13 @@ class Main:
 		if self.current_state == "warmup":
 			if not player.voted_begin:
 				text += "Warmup, press F3 when ready!"
-		if self.map and self.map.map.players.has_key(self.playerid):
-			player = self.map.map.players[self.playerid]
+		else:
 			if player.evil is not None:
 				if player.evil:
 					text += "You are evil. "
 				else:
 					text += "You are nice. "
-		if self.current_state == "game" and self.startTime:
-				text += "%.0fs left." % (ROUND_TIME + self.startTime - time.clock())
+			text += "%.0fs left." % (ROUND_TIME + self.startTime - time.clock())
 		self.statetext.change_text(text)
 
 	def mapUpdate(self, strmapdata):
