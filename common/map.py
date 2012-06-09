@@ -23,9 +23,6 @@ class Map:
 			self.blocks[x] = {}
 			self.background[x] = {}
 
-	def getMapUpdate(self, deltatime):
-		mapupdate = MapUpdate(deltatime=deltatime)
-	
 	def allBlocks(self):
 		result = []
 		for row in self.blocks.values():
@@ -39,6 +36,9 @@ class Map:
 					continue
 				result.append(b)
 		return result
+
+	def getMapUpdate(self, deltatime):
+		mapupdate = MapUpdate(deltatime=deltatime)
 
 		for x in range(self.blocks_horizontal):
 			for y in range(self.blocks_vertical):
