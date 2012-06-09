@@ -210,7 +210,7 @@ if __name__ == "__main__":
 		print "Sending map (%d bytes)" % len(data)
 		server.send(client, "mapdata " + data)
 
-	def changename(client, newname):
+	def name(client, newname):
 		global server
 
 		print "%s changed name to %s" % (client, newname)
@@ -318,7 +318,7 @@ if __name__ == "__main__":
 
 	server.say = say
 	server.sendmap = sendmap
-	server.changename = changename
+	server.name = name
 	server.abort = abort
 	server.joined = joined
 	server.left = left
