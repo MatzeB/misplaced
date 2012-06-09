@@ -148,28 +148,8 @@ class Player:
 		if self in collisions:
 			collisions.remove(self)
 		if len(collisions) > 0:
-			# calculate a push-out vector (assume we only collided with 1 thing)
-			if False:
-				collider = collisions[0]
-				cbbox = collider.boundingBox()
-				mybbox = self.boundingBox()
-				pen_top = cbbox[2] - mybbox[0]
-				pen_bottom = mybbox[2] - cbbox[0]
-				pen_left = cbbox[3] - mybbox[1]
-				pen_right = mybbox[3] - cbbox[1]
-				pens = [
-					(pen_top, Vector(0., 1.)),
-					(pen_bottom, Vector(0., -1.)),
-					(pen_left, Vector(1., 0)),
-					(pen_right, Vector(-1., 0)),
-				]
-				pens.sort()
-				print "Collision with %s" % str(collisions[0])
-				self.velocity = pens[0][1] * (float(pens[0][0])*5.)
-				print "Out velocity: %s" % self.velocity
-			else:
-				self.velocity *= -0.5
-				self.velocity.clamp(5)
+			self.velocity *= -0.5
+			self.velocity.clamp(5)
 			self.acceleration = Vector(0, 0)
 		else:
 			self.velocity = destvel
