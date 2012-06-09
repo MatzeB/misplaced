@@ -8,7 +8,7 @@ class Interaction:
 	NoInteraction = 0
 	Destroy = 1
 	Create = 2
-        PickUp = 3
+	PickUp = 3
 
 class Direction:
 	NoDir = 0
@@ -144,6 +144,10 @@ class Player:
 		if self.targetposition:
 			self.position += (self.targetposition - self.position) * dt
 
+	
+	# Get (left,top,right,bottom) bounding box
+	def boundingBox(self):
+		return (self.position.x, self.position.y, 32, 32)
 
 	def setUpdateData(self, data, packetTime):
 		self.name = data.name
