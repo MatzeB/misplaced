@@ -46,31 +46,32 @@ class PlayerVisualizer(Visualizer):
 			direction = obj.lastDirection
 		return direction2RoationMap[direction]
 
-        def getTargetOffset(self, obj):
-                direction = obj.currentDirection
-                if direction == Direction.NoDir:
-                        direction = obj.lastDirection
-                dirvector = direction_vectors[direction]
-                targetpos = Vector(16,16) + dirvector * 16
-                return targetpos
+	def getTargetOffset(self, obj):
+		direction = obj.currentDirection
+		if direction == Direction.NoDir:
+			direction = obj.lastDirection
+		dirvector = direction_vectors[direction]
+		targetpos = Vector(16,16) + dirvector * 16
+		return targetpos
 	
 	def draw(self, offset, obj):
 		if obj.visible:
-			self.graphics = self.spriteset.getWalkAnimationSprites(obj.currentDirection)
-
-			Visualizer.draw(self, offset, obj, rotation=self.getDirectionRotation(obj))
-
 			direction = obj.currentDirection
 			if direction == Direction.NoDir:
 				direction = obj.lastDirection
 			dirvector = direction_vectors[direction]
+
+			self.graphics = self.spriteset.getWalkAnimationSprites(direction)
+
+			Visualizer.draw(self, offset, obj, rotation=0)#self.getDirectionRotation(obj))
+
 			targetpos = obj.position + Vector(16,16) + dirvector * 16 + offset
 
 			pygl2d.draw.circle(
-                            (obj.getTargetPosition() + offset).toIntArr(),
-                            8, (255,0,0), 100)
-                        if obj.carrying:
-                            self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
+				(obj.getTargetPosition() + offset).toIntArr(),
+				8, (255,0,0), 100)
+			if obj.carrying:
+				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 	
 	def clientUpdate(self, dt, obj):
 		Visualizer.clientUpdate(self, dt, obj)
