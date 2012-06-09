@@ -32,7 +32,7 @@ class PlayerVisualizer(Visualizer):
 		self.spriteset = spriteset
 		self.graphics = self.spriteset.getWalkAnimationSprites(Direction.Up)
 
-        self.carriedblockvisualizer = CarriedBlock(tileset)
+		self.carriedblockvisualizer = CarriedBlock(tileset)
 
 	def getPosition(self, obj):
 		return obj.position
