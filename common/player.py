@@ -86,6 +86,12 @@ class Player:
 		else:
 			accel = Vector(0., 0.)
 
+		if direction == Direction.Left or direction == Direction.Right:
+			self.acceleration.x = 0
+		else:
+			assert direction == Direction.Up or direction == Direction.Down
+			self.acceleration.y = 0
+
 		self.acceleration += direction_vectors[direction] * accel
 
 		if self.currentDirection == Direction.NoDir:
