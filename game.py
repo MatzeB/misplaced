@@ -282,6 +282,9 @@ class Main:
 			if (time.time() - self.lastPongTime) > PING_INTERVALL:
 				self.sendPing()
 
+			if not self.networkClient.connected:
+				self.running = False
+
 if __name__ == '__main__':
 	playername = None
 	if len(sys.argv) > 1:
