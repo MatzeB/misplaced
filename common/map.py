@@ -67,7 +67,6 @@ class Map:
 					result = player
 					minDist = dist
 
-		print (minDist, result)
 		if minDist < 16: # Target needs to be that close
 			return result
 		else:
