@@ -28,6 +28,7 @@ class Main:
 
 		self.current_state = "warmup"
 		self.startTime = None
+		self.lastWinner = None
 
 		self.packetTime = 1/30.0
 		self.lastPingTime = time.clock()
@@ -41,6 +42,8 @@ class Main:
 		pygame.font.init()
 		fontname = pygame.font.get_default_font()
 		self.font = pygame.font.Font(fontname, 32)
+		self.centertext1 = RenderText("", Color("red"), self.font)
+		self.centertext2 = RenderText("", Color("red"), self.font)
 		self.statetext = RenderText("", Color("red"), self.font)
 
 		self.networkClient = Client(hostname)
@@ -53,6 +56,7 @@ class Main:
 		self.networkClient.pong = self.pong
 		self.networkClient.left = self.playerLeft
 		self.networkClient.state = self.state
+		self.networkClient.winner = self.winner
 
 		self.map = None
 
@@ -78,23 +82,33 @@ class Main:
 			self.map.setCurrentState(self.current_state)
 		if self.current_state == "game":
 			self.startTime = time.clock()
+
+	def winner(self, newWinner):
+		self.lastWinner = newWinner
 	
 	def updateStateText(self):
-		text = ""
+		self.centertext1.change_text("")
+		self.centertext2.change_text("")
+		self.statetext.change_text("")
+
 		player = None
 		if self.map and self.map.map.players.has_key(self.playerid):
 			player = self.map.map.players[self.playerid]
+
 		if self.current_state == "warmup":
+			if self.lastWinner:
+				self.centertext1.change_text("The %s team has won!" % self.lastWinner)
 			if not player.voted_begin:
-				text += "Warmup, press F3 when ready!"
+				self.centertext2.change_text("Warmup, press F3 when ready!")
 		else:
+			text = ""
 			if player.evil is not None:
 				if player.evil:
 					text += "You are evil. "
 				else:
 					text += "You are nice. "
 			text += "%.0fs left." % (ROUND_TIME + self.startTime - time.clock())
-		self.statetext.change_text(text)
+			self.statetext.change_text(text)
 
 	def mapUpdate(self, strmapdata):
 		# Assume the server just sent us a filename
@@ -198,6 +212,12 @@ class Main:
 		elif not self.networkClient.connected:
 			pass # todo draw waiting for server message
 
+		self.centertext1.draw(self.screenDim * 0.5
+				+ Vector(-self.centertext1.get_width()/2,
+		                 -self.centertext1.get_height()))
+		self.centertext2.draw(self.screenDim * 0.5
+				+ Vector(-self.centertext2.get_width()/2,
+		                  self.centertext2.get_height()))
 		self.statetext.draw(self.screenDim
 				- Vector(self.statetext.get_width() + 13,
 		                 self.statetext.get_height() + 13))

@@ -24,13 +24,7 @@ PvP: Wenn man jemanden verdächtigt dass er sabotiert um zu bleiben, kann man ihn
 Last 2 h TODOs:
 ---------------
 
- * Spieler benamsen
- * Timer für Spielende
- * Spielende anzeigen
- * Spieler auflösen
  * Karte schön machen
-
-
 
 
 Misplaced

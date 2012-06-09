@@ -30,8 +30,8 @@ class RenderText(object):
     def draw(self, pos):
         """Draw the font rendered image. <- return None
         """
-        
-        self.ren.draw(pos)
+        if self.text:    
+            self.ren.draw(pos)
     
     def rotate(self, rotation):
         """Rotate the font rendered image. <- return None

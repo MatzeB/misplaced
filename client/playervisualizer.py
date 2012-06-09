@@ -116,8 +116,8 @@ class PlayerVisualizer(Visualizer):
 			img.draw(obj.position + offset + Vector(-textImg.get_width()/2+16, -20))
 
 	
-	def clientUpdate(self, dt, obj):
+	def clientUpdate(self, dt, obj, colldet):
 		Visualizer.clientUpdate(self, dt, obj)
 		
-		obj.clientUpdate(dt)
+		obj.clientUpdate(dt, colldet)
 

@@ -45,6 +45,17 @@ class MapVisualizer:
 				background_block = self.map.background[x][y]
 				if background_block.type != 0:
 					self.blockvisualizer.draw(self.currentOffset, background_block)
+					if self.tileset[background_block.type].solid and False:
+						bbox = background_block.boundingBox()
+						bbox = (
+							bbox[0] + self.currentOffset.x,
+							bbox[1] + self.currentOffset.y,
+							bbox[2]-bbox[0],
+							bbox[3]-bbox[1],)
+						assert(bbox[2] == 32 and bbox[3] == 32)
+						pygl2d.draw.rect(bbox, (255, 255, 0), alpha=100)
+						pygl2d.draw.rect((32., int(bbox[1]), 32., 32.), (255, 255, 0), alpha=100)
+						pygl2d.draw.rect((150., 150., 32., 32.), (255, 255, 0), alpha=100)
 				solid_block = self.map.blocks[x][y]
 				if solid_block.type != 0:
 					self.blockvisualizer.draw(self.currentOffset, solid_block)
@@ -52,12 +63,13 @@ class MapVisualizer:
 		for id,player in self.map.players.iteritems():
 			self.playervisualizer.draw(self.currentOffset, player)
 
-                        # Debug highlighting
-                        block = self.map.findNearestBlockAt(
-                                self.map.background,
-                                player.getTargetPosition())
-                        pygl2d.draw.rect(
-                            	(block.x * self.blockvisualizer.blockWidth + self.currentOffset.x - TILE_WIDTH/2,
+			# Debug highlighting
+			block = self.map.findNearestBlockAt(
+			                                    self.map.background,
+			                                    player.getTargetPosition())
+			if block != None:
+				pygl2d.draw.rect(
+								(block.x * self.blockvisualizer.blockWidth + self.currentOffset.x - TILE_WIDTH/2,
 				 block.y * self.blockvisualizer.blockHeight + self.currentOffset.y - TILE_HEIGHT/2,
 				 TILE_WIDTH,
 				 TILE_HEIGHT),
@@ -78,7 +90,7 @@ class MapVisualizer:
 				self.blockvisualizer.clientUpdate(dt, self.map.blocks[x][y])
 
 		for id,player in self.map.players.iteritems():
-			self.playervisualizer.clientUpdate(dt, player)
+			self.playervisualizer.clientUpdate(dt, player, self.map.collision_detector)
 
 		self.updateOffset(dt)
 
