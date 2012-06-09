@@ -42,7 +42,7 @@ class Player:
 		self.visible = False
 		self.isDirty = False
 		self.targetposition = None
-		self.position = Vector(0,0)
+		self.position = Vector(96,96)
 		self.velocity = Vector(0,0)
 		self.acceleration = Vector(0,0)
 		self.movementAcceleration = 100
