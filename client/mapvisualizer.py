@@ -63,8 +63,8 @@ class MapVisualizer:
 			bbox = (
 				bbox[0] + self.currentOffset.x,
 				bbox[1] + self.currentOffset.y,
-				bbox[2],
-				bbox[3])
+				bbox[2]-bbox[0],
+				bbox[3]-bbox[1])
 			pygl2d.draw.rect(bbox, (0, 0, 255), alpha=100)
 
 	def clientUpdate(self, dt):
