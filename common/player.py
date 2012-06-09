@@ -67,6 +67,10 @@ class Player:
 			return Direction.Down
 		return Direction.Up
 
+	def mostlyUp(self):
+		alpha = self.oldAccel.getAngle()
+		return not (-pi/2 <= alpha <= pi/2)
+
 	def interact(self, interaction, setInteracting):
 		if not self.stunned and setInteracting:
 			if interaction == Interaction.Destroy:

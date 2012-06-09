@@ -72,7 +72,7 @@ class PlayerVisualizer(Visualizer):
 				self.graphics = self.spriteset.getStunnedSprites()
 
             # If the player moves up, draw carried things first
-			if obj.getDirection() == Direction.Up and obj.carrying:
+			if obj.mostlyUp() and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 
 			Visualizer.draw(self, offset + Vector(0,-11.), obj, rotation=0)#self.getDirectionRotation(obj))
@@ -81,7 +81,7 @@ class PlayerVisualizer(Visualizer):
 				pygl2d.draw.circle(
 					(obj.getTargetPosition() + offset).toIntArr(),
 					8, (255,0,0), 100)
-			if obj.getDirection() != Direction.Up and obj.carrying:
+			if not obj.mostlyUp() and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 
 			self.drawName(offset, obj)
