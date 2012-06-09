@@ -30,7 +30,7 @@ target_distance = [
     16,
     16,
     16,
-    10,
+    16,
 ]
 
 class Player:
