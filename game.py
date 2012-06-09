@@ -17,6 +17,11 @@ from mapparse import parse_map
 from libs.pygl2d.font import RenderText
 
 PING_INTERVALL = 3.0
+FREQ = 44100   # changed
+BITSIZE = -16  # changed
+CHANNELS = 2   # changed
+BUFFER = 1024  # changed
+FRAMERATE = 30 # changed
 
 class Main:
 	def __init__(self, playername, hostname):
@@ -194,7 +199,27 @@ class Main:
                                         self.player_interact(Interaction.PickUp, False)
 
 	
-
+	# ====================================================================================================
+	# =======================             Music                      =====================================
+	# ====================================================================================================
+	
+	def playMusic(self):
+		pass
+		if not pygame.mixer.music.get_busy():
+			pass
+			#Sounds.music.play()
+	
+	def initSound(self):
+		try: #changed
+			pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)#changed
+		except pygame.error, exc:#changed
+			print >>sys.stderr, "Could not initialize sound system: %s" % exc#changed
+			return 1#changed
+		Sounds.attack = pygame.mixer.Sound(Sounds.attackPath)
+		Sounds.setBlock = pygame.mixer.Sound(Sounds.setBlockPath)
+		Sounds.hit = pygame.mixer.Sound(Sounds.hitPath)
+		Sounds.getBlock = pygame.mixer.Sound(Sounds.getBlockPath)
+		Sounds.music = pygame.mixer.Sound(Sounds.musicPath)
 	# ====================================================================================================
 	# =======================           Game Loop                    =====================================
 	# ====================================================================================================
