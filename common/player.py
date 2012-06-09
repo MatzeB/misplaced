@@ -282,22 +282,25 @@ class Player:
 		
 		parts = strdata[1:-1].split(",")
 
-		result.id = parts[0]
-		result.name = parts[1]
-		result.visible = parts[2] == "True"
-		result.position = Vector.deserialize(parts[3])
-		result.velocity = Vector.deserialize(parts[4])
-		result.acceleration = Vector.deserialize(parts[5])
-		result.oldAccel = Vector.deserialize(parts[6])
-		result.movementAcceleration = float(parts[7])
-		result.currentInteraction = int(parts[8])
-		if parts[9] == "None": result.currentInteractionBlockType = None
-		else: result.currentInteractionBlockType = int(parts[9])
-		if parts[10] == "None": result.carrying = None
-		else: result.carrying = int(parts[10])
-		result.voted_begin = parts[11] == "True"
-		result.stunned = parts[12] == "True"
-		if parts[13] == "None": result.evil = None
-		else: result.evil = parts[13] == "True"
+		result.id = parts.pop(0)
+		result.name = parts.pop(0)
+		result.visible = parts.pop(0) == "True"
+		result.position = Vector.deserialize(parts.pop(0))
+		result.velocity = Vector.deserialize(parts.pop(0))
+		result.acceleration = Vector.deserialize(parts.pop(0))
+		result.oldAccel = Vector.deserialize(parts.pop(0))
+		result.movementAcceleration = float(parts.pop(0))
+		result.currentInteraction = int(parts.pop(0))
+		part = parts.pop(0)
+		if part == "None": result.currentInteractionBlockType = None
+		else: result.currentInteractionBlockType = int(part)
+		part = parts.pop(0)
+		if part == "None": result.carrying = None
+		else: result.carrying = int(part)
+		result.voted_begin = parts.pop(0) == "True"
+		result.stunned = parts.pop(0) == "True"
+		part = parts.pop(0)
+		if part == "None": result.evil = None
+		else: result.evil = part == "True"
 
 		return result
