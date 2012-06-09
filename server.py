@@ -7,6 +7,7 @@ from common.map import *
 from common.player import *
 from common.rules import *
 from mapparse import parse_map
+import sys
 
 HOST = ''
 PORT = 12345
@@ -16,6 +17,8 @@ SEND_INTERVALL = 0.1
 
 # Game state
 mapname = "data/test.stl"
+if len(sys.argv) > 1:
+	mapname = sys.argv[1]
 mapdata = parse_map(open(mapname))
 state = "warmup"
 startTime = None
