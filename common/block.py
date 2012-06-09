@@ -52,6 +52,11 @@ class Block:
 
 		return result
 
+	def boundingBox(self):
+		tx = self.x*32
+		ty = self.y*32
+		return (tx, ty, tx+32, ty+32)
+
 	@staticmethod
 	def deserialize(strdata):
 		parts = strdata[1:-1].split(",")

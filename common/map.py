@@ -2,6 +2,7 @@ import pickle, base64
 from block import *
 from player import *
 from common.vector import *
+from common.collisiondetector import CollisionDetector
 
 class Map:
 	def __init__(self, blocks_horizontal, blocks_vertical, tileset):
@@ -15,6 +16,8 @@ class Map:
 		self.height = blocks_vertical * 32
 		self.blocks_vertical = blocks_vertical
 
+		self.collision_detector = CollisionDetector(self)
+
 		self.blocks = {}
 		for x in range(self.blocks_horizontal):
 			self.blocks[x] = {}
@@ -22,6 +25,20 @@ class Map:
 
 	def getMapUpdate(self, deltatime):
 		mapupdate = MapUpdate(deltatime=deltatime)
+	
+	def allBlocks(self):
+		result = []
+		for row in self.blocks.values():
+			for b in row.values():
+				if b.type == 0:
+					continue
+				result.append(b)
+		for row in self.background.values():
+			for b in row.values():
+				if b.type == 0:
+					continue
+				result.append(b)
+		return result
 
 		for x in range(self.blocks_horizontal):
 			for y in range(self.blocks_vertical):
@@ -78,7 +95,7 @@ class Map:
 				self.blocks[x][y].update(dt)
 
 		for id,player in self.players.iteritems():
-			player.update(dt)
+			player.update(dt, self.collision_detector)
 
 			if player.currentInteraction == Interaction.Destroy:
 				block = self.findNearestBlockAt(self.blocks, player.getTargetPosition())

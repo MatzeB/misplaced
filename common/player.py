@@ -77,12 +77,14 @@ class Player:
 
 
 	def move(self, direction, doMove):
-		accel = self.movementAcceleration
-		if not doMove:
-			accel *= -1
-
 		if self.stunned:
-			accel = 0
+			self.acceleration = Vector(0,0)
+			return
+
+		if doMove:
+			accel = self.movementAcceleration
+		else:
+			accel = Vector(0., 0.)
 
 		self.acceleration += direction_vectors[direction] * accel
 
@@ -131,31 +133,63 @@ class Player:
 		else:
 			self.currentInteractionBlockType = None
 
-	def update(self, dt):
-		if self.velocity.getLength() > 0 or self.acceleration.getLength() > 0:
-			self.velocity += self.acceleration
-			self.position += self.velocity * dt
+	def update(self, dt, collision_detector):
+		if self.velocity.getLength() < 0.01 and self.acceleration.getLength() < 0.01:
+			return
+
+		destvel = self.velocity + self.acceleration
+		destpos = self.position + (destvel * dt)
+		destbbox = (destpos.x,    destpos.y,
+					destpos.x+32, destpos.y+32)
+		collisions = collision_detector.get_collisions(destbbox)
+		if self in collisions:
+			collisions.remove(self)
+		if len(collisions) > 0:
+			# calculate a push-out vector (assume we only collided with 1 thing)
+			if False:
+				collider = collisions[0]
+				cbbox = collider.boundingBox()
+				mybbox = self.boundingBox()
+				pen_top = cbbox[2] - mybbox[0]
+				pen_bottom = mybbox[2] - cbbox[0]
+				pen_left = cbbox[3] - mybbox[1]
+				pen_right = mybbox[3] - cbbox[1]
+				pens = [
+					(pen_top, Vector(0., 1.)),
+					(pen_bottom, Vector(0., -1.)),
+					(pen_left, Vector(1., 0)),
+					(pen_right, Vector(-1., 0)),
+				]
+				pens.sort()
+				print "Collision with %s" % str(collisions[0])
+				self.velocity = pens[0][1] * (float(pens[0][0])*5.)
+				print "Out velocity: %s" % self.velocity
+			else:
+				self.velocity *= -0.5
+				self.velocity.clamp(5)
+			self.acceleration = Vector(0, 0)
+		else:
+			self.velocity = destvel
+			self.position = destpos
+			assert self.boundingBox() == destbbox
+			assert(len(collision_detector.get_collisions(self.boundingBox())) <= 1)
 			self.velocity *= 0.1
 
-			if self.velocity.getLength() < 0.001:
-				self.velocity = Vector(0,0)
+		if self.velocity.getLength() < 0.001:
+			self.velocity = Vector(0,0)
+		self.velocity.clamp(200)
 
-			self.velocity.clamp(200)
+		self.isDirty = True
 
-			if self.position.x < 0:
-				self.position.x = 0
-				self.velocity.x *= -1
-			if self.position.y < 0:
-				self.position.y = 0
-				self.velocity.y *= -1
-
-			self.isDirty = True
-
-	def clientUpdate(self, dt):
-		self.update(dt)
+	def clientUpdate(self, dt, collision_detector):
+		self.update(dt, collision_detector)
 
 		if self.targetposition:
-			self.position += (self.targetposition - self.position) * dt
+			destpos = self.position + (self.targetposition - self.position) * dt
+			if len(collision_detector.get_collisions(self.boundingBox())) <= 1:
+				self.position = destpos
+			else:
+				self.position = self.targetposition
 
 	
 	# Get (left,top,right,bottom) bounding box
