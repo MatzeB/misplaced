@@ -192,8 +192,13 @@ class Main:
 					self.player_interact(Interaction.Destroy, True)
 				elif e.key == pygame.K_RETURN:
 					if self.sayMode:
-						self.networkClient.send("say %s" % self.sayText[4:])
 						self.sayMode = False
+						text = self.sayText[5:]
+						if text.startswith("/name "):
+							newname = text[6:]
+							self.networkClient.send("name %s" % newname)
+						else:
+							self.networkClient.send("say %s" % text)
 					else:
 						self.networkClient.send(NetworkCommand.Player_Command_PickUp, True)
 						self.player_interact(Interaction.PickUp, True)
