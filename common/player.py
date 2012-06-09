@@ -47,7 +47,7 @@ class Player:
         def getTargetPosition(self):
 	    direction = self.currentDirection
 	    if direction == Direction.NoDir:
-		drection = self.lastDirection
+		direction = self.lastDirection
 	    dirvector = direction_vectors[direction]
 	    targetpos = self.position + Vector(16,16) + dirvector * 16
 	    return targetpos
