@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
 	def say(client, text):
 		global server
-		server.sendall("say %s: %s" % (client.name, text))
+		server.sendall("say %s|%s" % (client.player.id, text))
 
 	def sendmap(client, text):
 		global server
