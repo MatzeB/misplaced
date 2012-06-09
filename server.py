@@ -154,7 +154,7 @@ if __name__ == "__main__":
 		server.sendall("state %s" % state)
 		if state == "game":
 			global startTime 
-			startTime = time.clock()
+			startTime = time.time()
 
 	def gameupdate(server, dt):
 		global state
@@ -273,7 +273,7 @@ if __name__ == "__main__":
 	def check_losing_condition():
 		global server
 		if startTime:
-			return time.clock() > startTime + ROUND_TIME
+			return time.time() > startTime + ROUND_TIME
 
 	def votebegin(client, text):
 		global n_votebegin
@@ -308,13 +308,13 @@ if __name__ == "__main__":
 	server.ping = ping
 	server.votebegin = votebegin
 
-	t = time.clock()
+	t = time.time()
 	lastUpdateTime = t
 	lastSendTime = t
 	while True:
 		server.process_network()
 
-		t = time.clock()
+		t = time.time()
 		dt = t - lastUpdateTime
 		if dt > UPDATE_INTERVALL:
 			gameupdate(server, dt)

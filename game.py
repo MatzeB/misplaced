@@ -37,8 +37,8 @@ class Main:
 		self.lastWinner = None
 
 		self.packetTime = 1/30.0
-		self.lastPingTime = time.clock()
-		self.lastPongTime = time.clock()
+		self.lastPingTime = time.time()
+		self.lastPongTime = time.time()
 
 		self.playername = playername or "Player_" + str(int(100 * random()))
 		self.playerid = None
@@ -71,11 +71,11 @@ class Main:
 	# ====================================================================================================
 
 	def sendPing(self):
-		self.lastPingTime = time.clock()
+		self.lastPingTime = time.time()
 		self.networkClient.send(NetworkCommand.Ping, self.lastPingTime)
 
 	def pong(self, number):
-		t = time.clock()
+		t = time.time()
 		self.packetTime = (t - self.lastPingTime)/2.0
 		self.lastPongTime = t
 
@@ -87,7 +87,7 @@ class Main:
 		if self.map:
 			self.map.setCurrentState(self.current_state)
 		if self.current_state == "game":
-			self.startTime = time.clock()
+			self.startTime = time.time()
 
 	def winner(self, newWinner):
 		self.lastWinner = newWinner
@@ -113,7 +113,7 @@ class Main:
 						text += "You are evil. "
 					else:
 						text += "You are nice. "
-				text += "%.0fs left." % (ROUND_TIME + self.startTime - time.clock())
+				text += "%.0fs left." % (ROUND_TIME + self.startTime - time.time())
 				self.statetext.change_text(text)
 
 	def mapUpdate(self, strmapdata):
@@ -271,7 +271,7 @@ class Main:
 			self.update(dt)
 			self.draw()
 
-			if (time.clock() - self.lastPongTime) > PING_INTERVALL:
+			if (time.time() - self.lastPongTime) > PING_INTERVALL:
 				self.sendPing()
 
 if __name__ == '__main__':
