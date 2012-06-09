@@ -33,6 +33,7 @@ class Player:
 		self.name = "unnamed"
 		self.visible = False
 		self.isDirty = False
+		self.targetposition = None
 		self.position = Vector(0,0)
 		self.velocity = Vector(0,0)
 		self.acceleration = Vector(0,0)
@@ -140,10 +141,14 @@ class Player:
 	def clientUpdate(self, dt):
 		self.update(dt)
 
+		if self.targetposition:
+			self.position += (self.targetposition - self.position) * dt
+
 
 	def setUpdateData(self, data, packetTime):
 		self.name = data.name
 		self.visible = data.visible
+		self.targetposition = data.position + data.velocity * packetTime
 		self.velocity = data.velocity
 		self.acceleration = data.acceleration
 		self.movementAcceleration = data.movementAcceleration
