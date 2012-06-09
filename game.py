@@ -52,6 +52,7 @@ class Main:
 		self.centertext1 = RenderText("", Color("red"), self.font)
 		self.centertext2 = RenderText("", Color("red"), self.font)
 		self.statetext = RenderText("", Color("red"), self.font)
+		self.saytext = RenderText("", Color("white"), self.font)
 
 		self.networkClient = Client(hostname)
 
@@ -65,6 +66,9 @@ class Main:
 		self.networkClient.state = self.state
 		self.networkClient.winner = self.winner
 		self.networkClient.voteresult = self.voteresult
+
+		self.sayMode = False
+		self.sayText = None
 
 		self.map = None
 
@@ -163,27 +167,40 @@ class Main:
 				self.running = False
 			elif e.type == pygame.KEYDOWN:
 
-				if e.key == pygame.K_LEFT or e.key == pygame.K_a:
+				if e.key == pygame.K_LEFT:
 					self.networkClient.send(NetworkCommand.Player_Command_Left, True)
 					self.movePlayer(Direction.Left, True)
-				elif e.key == pygame.K_RIGHT or e.key == pygame.K_d:
+				elif e.key == pygame.K_RIGHT:
 					self.networkClient.send(NetworkCommand.Player_Command_Right, True)
 					self.movePlayer(Direction.Right, True)
-				elif e.key == pygame.K_UP or e.key == pygame.K_w:
+				elif e.key == pygame.K_UP:
 					self.networkClient.send(NetworkCommand.Player_Command_Up, True)
 					self.movePlayer(Direction.Up, True)
-				elif e.key == pygame.K_DOWN or e.key == pygame.K_s:
+				elif e.key == pygame.K_DOWN:
 					self.networkClient.send(NetworkCommand.Player_Command_Down, True)
 					self.movePlayer(Direction.Down, True)
 				elif e.key == pygame.K_SPACE:
 					self.networkClient.send(NetworkCommand.Player_Command_Destroy, True)
 					self.player_interact(Interaction.Destroy, True)
-                                elif e.key == pygame.K_RETURN:
-                                        self.networkClient.send(NetworkCommand.Player_Command_PickUp, True)
-                                        self.player_interact(Interaction.PickUp, True)
+				elif e.key == pygame.K_RETURN:
+					if self.sayMode:
+						self.networkClient.send("say %s" % self.sayText[4:])
+						self.sayMode = False
+					else:
+						self.networkClient.send(NetworkCommand.Player_Command_PickUp, True)
+						self.player_interact(Interaction.PickUp, True)
 				elif e.key == pygame.K_F3:
 					self.networkClient.send("votebegin")
- 
+				elif not self.sayMode and e.key == pygame.K_t:
+					self.sayMode = True
+					self.sayText = "Say: "
+					self.saytext.change_text(self.sayText)	
+				elif e.key == pygame.K_BACKSPACE and self.sayMode and len(self.sayText) > 4:
+					self.sayText = self.sayText[:-1]
+					self.saytext.change_text(self.sayText)
+				elif self.sayMode:
+					self.sayText += e.unicode
+					self.saytext.change_text(self.sayText)	
 			
 			elif e.type == pygame.KEYUP:
 				if e.key == pygame.K_ESCAPE:
@@ -256,6 +273,8 @@ class Main:
 		self.statetext.draw(self.screenDim
 				- Vector(self.statetext.get_width() + 13,
 		                 self.statetext.get_height() + 13))
+		if self.sayMode:
+			self.saytext.draw((13, self.screenDim.y - self.statetext.get_height()-13))
 
 		pygl2d.window.end_draw()
 	

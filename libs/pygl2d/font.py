@@ -18,6 +18,8 @@ class RenderText(object):
     def change_text(self, text, color="default"):
         """Change the font render's text. <- return None
         """
+        if text == self.text:
+            return
         
         glDeleteTextures([self.ren.texture])
         del self.ren
