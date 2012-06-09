@@ -2,7 +2,7 @@ from blockvisualizer import *
 from playervisualizer import *
 from common.vector import *
 from common.block import *
-from tileset import TileSet
+from common.tileset import TileSet
 
 class MapVisualizer:
 	def __init__(self, mapdata, playerid, screenDim):
