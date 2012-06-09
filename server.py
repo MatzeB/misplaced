@@ -299,6 +299,8 @@ if __name__ == "__main__":
 
 	def votebegin(client, text):
 		global n_votebegin
+		if state != "warmup":
+			return
 		if client.player.voted_begin:
 			return
 		client.player.voted_begin = True
