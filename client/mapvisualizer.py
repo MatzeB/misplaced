@@ -29,6 +29,7 @@ class MapVisualizer:
 
 	def setData(self, mapdata):
 		self.map = mapdata # todo: interpolate
+		self.map.tileset = self.tileset
 
 	def setUpdateData(self, mapupdate, pakettime):
 		self.map.incrementalUpdate(mapupdate, pakettime)
