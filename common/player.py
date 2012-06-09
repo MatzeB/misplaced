@@ -229,6 +229,7 @@ class Player:
 		self.targetposition = data.position + data.velocity * packetTime
 		self.velocity = data.velocity
 		self.acceleration = data.acceleration
+		self.oldAccel = data.oldAccel
 		self.movementAcceleration = data.movementAcceleration
 		self.currentInteraction = data.currentInteraction
 		self.currentInteractionBlockType = data.currentInteractionBlockType
@@ -239,13 +240,14 @@ class Player:
 
 
 	def serialize(self):
-		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
 			self.id,
 			self.name,
 			self.visible,
 			self.position.serialize(),
 			self.velocity.serialize(),
 			self.acceleration.serialize(),
+			self.oldAccel.serialize(),
 			self.movementAcceleration,
 			self.currentInteraction,
 			self.currentInteractionBlockType,
@@ -269,15 +271,16 @@ class Player:
 		result.position = Vector.deserialize(parts[3])
 		result.velocity = Vector.deserialize(parts[4])
 		result.acceleration = Vector.deserialize(parts[5])
-		result.movementAcceleration = float(parts[6])
-		result.currentInteraction = int(parts[7])
-		if parts[8] == "None": result.currentInteractionBlockType = None
-		else: result.currentInteractionBlockType = int(parts[8])
-		if parts[9] == "None": result.carrying = None
-		else: result.carrying = int(parts[9])
-		result.voted_begin = parts[10] == "True"
-		result.stunned = parts[11] == "True"
-		if parts[12] == "None": result.evil = None
-		else: result.evil = parts[12] == "True"
+		result.oldAccel = Vector.deserialize(parts[6])
+		result.movementAcceleration = float(parts[7])
+		result.currentInteraction = int(parts[8])
+		if parts[9] == "None": result.currentInteractionBlockType = None
+		else: result.currentInteractionBlockType = int(parts[9])
+		if parts[10] == "None": result.carrying = None
+		else: result.carrying = int(parts[10])
+		result.voted_begin = parts[11] == "True"
+		result.stunned = parts[12] == "True"
+		if parts[13] == "None": result.evil = None
+		else: result.evil = parts[13] == "True"
 
 		return result
