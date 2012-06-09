@@ -64,7 +64,7 @@ class Player:
 
 
 	def interact(self, interaction, setInteracting):
-		if setInteracting:
+		if not self.stunned and setInteracting:
 			if interaction == Interaction.Destroy:
 				self.currentInteraction = interaction
 			elif interaction == Interaction.Create:
@@ -79,6 +79,9 @@ class Player:
 		accel = self.movementAcceleration
 		if not doMove:
 			accel *= -1
+
+		if self.stunned:
+			accel = 0
 
 		self.acceleration += direction_vectors[direction] * accel
 

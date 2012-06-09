@@ -95,6 +95,7 @@ class Map:
 							victim.stunned = False
 						else:
 							victim.stunned = True
+							victim.currentInteraction = Interaction.NoInteraction
 						player.currentInteraction = Interaction.NoInteraction
 						victim.isDirty = True
 						player.isDirty = True
