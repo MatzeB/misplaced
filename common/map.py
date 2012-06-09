@@ -59,12 +59,6 @@ class Map:
 
 		return result
 
-	def getTargetBlock(self, list, position, direction):
-		dirvector = direction_vectors[direction]
-		targetpos = position + Vector(32,32) + dirvector * 16
-
-		return self.findNearestBlockAt(list, targetpos)
-
 	def update(self, dt):
 		for x in range(self.blocks_horizontal):
 			for y in range(self.blocks_vertical):
@@ -74,15 +68,14 @@ class Map:
 			player.update(dt)
 
 			if player.currentInteraction == Interaction.Destroy:
-				block = self.getTargetBlock(self.blocks, player.position, player.currentDirection)
-				
+				block = self.findNearestBlockAt(self.blocks, player.getTargetPosition())
 				if block and block.type != 0:
 					player.updateInteraction(dt, block)
 					if not block.isInteracting:
 						block.isInteracting = True
 						block.isDirty = True
 				else:
-					block = self.getTargetBlock(self.background, player.position, player.currentDirection)
+					block = self.findNearestBlockAt(self.background, player.getTargetPosition())
 					
 					if block:
 						player.updateInteraction(dt, block)
@@ -91,8 +84,8 @@ class Map:
 							block.isDirty = True
 
 			if player.currentInteraction == Interaction.PickUp:
-				block = self.getTargetBlock(self.blocks, player.position, player.currentDirection)
-                                player.updateInteraction(dt, block)
+				block = self.findNearestBlockAt(self.blocks, player.getTargetPosition())
+				player.updateInteraction(dt, block)
 
 	def generate(self):
 		for x in range(self.blocks_horizontal):
