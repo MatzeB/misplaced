@@ -66,6 +66,7 @@ class Main:
 		self.networkClient.state = self.state
 		self.networkClient.winner = self.winner
 		self.networkClient.voteresult = self.voteresult
+		self.networkClient.say = self.say
 
 		self.sayMode = False
 		self.sayText = None
@@ -147,6 +148,13 @@ class Main:
 	def playerLeft(self, playerid):
 		if self.map.map.players.has_key(playerid):
 			del self.map.map.players[playerid]
+	
+	def say(self, text):
+		(playerid,_,text) = text.partition("|")
+		if self.map.map.players.has_key(playerid):
+			self.map.map.players[playerid].chattext = text
+		else:
+		 	print "say dest not here?"
 
 	# ====================================================================================================
 	# =======================           Inputs                       =====================================

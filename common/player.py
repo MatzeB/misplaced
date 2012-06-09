@@ -1,6 +1,9 @@
 from vector import *
 from block import BlockType
 from client.soundconstants import Sounds
+from libs.pygl2d.font import RenderText
+import pygame.font
+from pygame import Color
 
 TILE_WIDTH = 32
 TILE_HEIGHT = 32
@@ -46,6 +49,7 @@ class Player:
 		self.voted_begin = False
 		self.stunned = False
 		self.evil = None
+		self.chattext = ""
 
 	def reset(self):
 		self.stunned = False
@@ -226,6 +230,11 @@ class Player:
 		self.stunned = data.stunned
 		self.evil = data.evil
 
+	def textupdate(self):
+		text = self.name
+		if self.chattext != "":
+			text += ": %s" % self.chattext
+		self.nametext.change_text(text)
 
 	def serialize(self):
 		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (

@@ -39,7 +39,6 @@ class PlayerVisualizer(Visualizer):
 
 		self.carriedblockvisualizer = CarriedBlock(tileset)
 
-		self.nameCache = {}
 		fontname = pygame.font.get_default_font()
 		self.font = pygame.font.Font(fontname, 14)
 		attitudeFont = pygame.font.Font(fontname, 12)
@@ -87,10 +86,13 @@ class PlayerVisualizer(Visualizer):
 			self.drawName(offset, obj)
 
 	def drawName(self, offset, obj):
-		if not self.nameCache.has_key(obj.name):
-			self.nameCache[obj.name] = RenderText(obj.name, Color("green"), self.font)
-
-		textImg = self.nameCache[obj.name]
+		text = obj.name
+		if obj.chattext.strip() != "":
+			text += ": %s" % obj.chattext
+		if not hasattr(obj, "textImg"):
+			obj.textImg = RenderText(text, Color("green"), self.font)
+		textImg = obj.textImg
+		textImg.change_text(text)
 		textImg.draw(obj.position + offset + Vector(-textImg.get_width()/2, -32))
 
 		if self.current_state == "warmup" and obj.evil is not None:
