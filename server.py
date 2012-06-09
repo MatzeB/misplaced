@@ -151,7 +151,8 @@ if __name__ == "__main__":
 		game_is_won = mapdata.check_winning_condition()
 		if game_is_won:
 			print "You created the SOS, help will be here soon"
-			server.sendall("abort")
+			server.sendall("winner nice")
+			server.sendall("state warmup")
 
 	def sendgameupdate(server, deltatime):
 		mapupdate = mapdata.getMapUpdate(deltatime)
@@ -238,10 +239,11 @@ if __name__ == "__main__":
 			evil = nice_players[s]
 			nice_players.remove[evil]
 			evil.evil = True
+			evil.isDirty = True
 
-			server.send(evil.client, "attitude evil")
 		for nice in nice_players:
-			server.send(nice.client, "attitude nice")
+			nice.evil = False
+			nice.isDirty = True
 		server.sendall("state game")
 		print "Round begins"
 		# TODO: start timer
@@ -251,6 +253,7 @@ if __name__ == "__main__":
 		if client.player.voted_begin:
 			return
 		client.player.voted_begin = True
+		client.player.isDirty = True
 		n_votebegin += 1
 
 		if n_votebegin == len(mapdata.players):

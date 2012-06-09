@@ -26,7 +26,6 @@ class Main:
 		self.showFPS = True
 
 		self.current_state = "warmup"
-		self.attitude = "unknown"
 
 		self.packetTime = 1/30.0
 		self.lastPingTime = time.clock()
@@ -52,7 +51,6 @@ class Main:
 		self.networkClient.pong = self.pong
 		self.networkClient.left = self.playerLeft
 		self.networkClient.state = self.state
-		self.networkClient.attitude = self.change_attitude
 
 		self.map = None
 
@@ -74,20 +72,25 @@ class Main:
 
 	def state(self, newstate):
 		self.current_state = newstate
-		if self.current_state == "warmup":
-			self.statetext.change_text("Warmup, press F3 when ready")
-		elif self.current_state == "won":
-			self.statetext.change_text("Finished")
-		elif self.current_state == "game":
-			self.statetext.change_text("You are %s" % self.attitude)
-		else:
-			print "Unknown gmae state '%s'" % newstate
-			self.statetext.change_text("Unknown state")
-
-	def change_attitude(self, newattitude):
-		self.attitude = newattitude
-		# Update info text
-		self.state(self.current_state)
+		if self.map:
+			self.map.current_state = self.current_state
+		self.updateStateText()
+	
+	def updateStateText(self):
+		text = ""
+		player = None
+		if self.map and self.map.map.players.has_key(self.playerid):
+			player = self.map.map.players[self.playerid]
+		if self.current_state == "warmup" and not player.voted_begin:
+			text += "Warmup, press F3 when ready!"
+		if self.map and self.map.map.players.has_key(self.playerid):
+			player = self.map.map.players[self.playerid]
+			if player.evil is not None:
+				if player.evil:
+					text += "You are evil."
+				else:
+					text += "You are nice."
+		self.statetext.change_text(text)
 
 	def mapUpdate(self, strmapdata):
 		# Assume the server just sent us a filename
@@ -95,6 +98,7 @@ class Main:
 		mapdata = Map.deserialize(strmapdata)
 		if not self.map:
 			self.map = MapVisualizer(mapdata, self.playerid, self.screenDim)
+			self.map.current_state = self.current_state
 		else:
 			self.map.setData(mapdata)
 	
@@ -180,6 +184,7 @@ class Main:
 	def update(self, dt):
 		if self.map:
 			self.map.clientUpdate(dt)
+		self.updateStateText()
 	
 	def draw(self):
 		pygl2d.window.begin_draw()
