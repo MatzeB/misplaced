@@ -139,7 +139,10 @@ class Player:
 
 	def clientUpdate(self, dt):
 		self.update(dt)
-
+	
+	# Get (left,top,right,bottom) bounding box
+	def boundingBox(self):
+		return (self.position.x, self.position.y, 32, 32)
 
 	def setUpdateData(self, data, packetTime):
 		self.name = data.name
