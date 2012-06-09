@@ -179,7 +179,7 @@ class Main:
 				elif e.key == pygame.K_DOWN:
 					self.networkClient.send(NetworkCommand.Player_Command_Down, True)
 					self.movePlayer(Direction.Down, True)
-				elif e.key == pygame.K_SPACE:
+				elif e.key == pygame.K_SPACE and not self.sayMode:
 					self.networkClient.send(NetworkCommand.Player_Command_Destroy, True)
 					self.player_interact(Interaction.Destroy, True)
 				elif e.key == pygame.K_RETURN:
