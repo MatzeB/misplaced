@@ -88,13 +88,16 @@ class Map:
 						block.isInteracting = True
 						block.isDirty = True
 				else:
-					block = self.findNearestBlockAt(self.background, player.getTargetPosition())
-					
-					if block:
-						player.updateInteraction(dt, block)
-						if not block.isInteracting:
-							block.isInteracting = True
-							block.isDirty = True
+					victim = self.findPlayerAt(player.getTargetPosition(), player)
+
+					if victim:
+						if victim.stunned:	
+							victim.stunned = False
+						else:
+							victim.stunned = True
+						player.currentInteraction = Interaction.NoInteraction
+						victim.isDirty = True
+						player.isDirty = True
 
 			if player.currentInteraction == Interaction.PickUp:
 				block = self.findNearestBlockAt(self.blocks, player.getTargetPosition())
