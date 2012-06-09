@@ -55,15 +55,19 @@ class Player:
 		self.voted_begin = False
 		self.stunned = False
 		self.evil = None
-        
-        def getTargetPosition(self):
-			direction = self.currentDirection
-			if direction == Direction.NoDir:
-				direction = self.lastDirection
-			dirvector = direction_vectors[direction]
-			targetpos = self.position + Vector(16,16) + dirvector * target_distance[direction]
-			return targetpos
 
+	def reset(self):
+		self.stunned = False
+		self.carrying = None
+		self.isDirty = True
+        
+	def getTargetPosition(self):
+		direction = self.currentDirection
+		if direction == Direction.NoDir:
+			direction = self.lastDirection
+		dirvector = direction_vectors[direction]
+		targetpos = self.position + Vector(16,16) + dirvector * target_distance[direction]
+		return targetpos
 
 	def interact(self, interaction, setInteracting):
 		if not self.stunned and setInteracting:
