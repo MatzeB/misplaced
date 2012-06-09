@@ -27,9 +27,12 @@ class CarriedBlock(BlockVisualizer):
 
 class PlayerVisualizer(Visualizer):
 
-	def __init__(self, tileset, graphicfiles):
-		Visualizer.__init__(self, graphicfiles)
-                self.blockvisualizer = CarriedBlock(tileset)
+	def __init__(self, spriteset, tileset):
+		Visualizer.__init__(self)
+		self.spriteset = spriteset
+		self.graphics = self.spriteset.getWalkAnimationSprites(Direction.Up)
+
+		self.blockvisualizer = CarriedBlock(tileset)
 
 	def getPosition(self, obj):
 		return obj.position
@@ -45,6 +48,8 @@ class PlayerVisualizer(Visualizer):
 	
 	def draw(self, offset, obj):
 		if obj.visible:
+			self.graphics = self.spriteset.getWalkAnimationSprites(obj.currentDirection)
+
 			Visualizer.draw(self, offset, obj, rotation=self.getDirectionRotation(obj))
 
 			direction = obj.currentDirection
@@ -54,9 +59,9 @@ class PlayerVisualizer(Visualizer):
 			targetpos = obj.position + Vector(16,16) + dirvector * 16 + offset
 
 			pygl2d.draw.circle(targetpos.toIntArr(), 8, (255,0,0), 100)
-                        print "obj.carrying = %s" % obj.carrying
-                        if obj.carrying:
-                            self.blockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
+			print "obj.carrying = %s" % obj.carrying
+			if obj.carrying:
+				self.blockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 	
 	def clientUpdate(self, dt, obj):
 		Visualizer.clientUpdate(self, dt, obj)

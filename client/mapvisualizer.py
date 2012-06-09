@@ -3,6 +3,7 @@ from playervisualizer import *
 from common.vector import *
 from common.block import *
 from common.tileset import TileSet
+from common.sprite import PlayerSpriteSet
 
 class MapVisualizer:
 	def __init__(self, mapdata, playerid, screenDim):
@@ -11,14 +12,10 @@ class MapVisualizer:
 		self.screenDim = screenDim
 
 		self.tileset = TileSet("data/tiles.png", 16, 16)
+		self.spriteset = PlayerSpriteSet("data/player.png", 9, 4)
 		self.map.tileset = self.tileset
 		self.blockvisualizer = BlockVisualizer(self.tileset)
-		self.playervisualizer = PlayerVisualizer(
-                        self.tileset,
-                        [
-			"client/graphics/player_0.png",
-			"client/graphics/player_1.png"
-		])
+		self.playervisualizer = PlayerVisualizer(self.spriteset, self.tileset)
 
 		self.targetOffset = Vector(0,0)
 		self.currentOffset = Vector(0,0)

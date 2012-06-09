@@ -42,7 +42,7 @@ class Player:
 		self.currentDirection = Direction.Up
 		self.currentInteraction = Interaction.NoInteraction
 		self.currentInteractionBlockType = None
-                self.carrying = None
+		self.carrying = None
 
 	def interact(self, interaction, setInteracting):
 		if setInteracting:
