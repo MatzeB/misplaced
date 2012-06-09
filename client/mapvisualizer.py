@@ -58,6 +58,15 @@ class MapVisualizer:
 				 TILE_HEIGHT),
 				(255,0,0), alpha=100)
 
+			# Debug highlighting for collision bounding box
+			bbox = player.boundingBox()
+			bbox = (
+				bbox[0] + self.currentOffset.x,
+				bbox[1] + self.currentOffset.y,
+				bbox[2]-bbox[0],
+				bbox[3]-bbox[1])
+			pygl2d.draw.rect(bbox, (0, 0, 255), alpha=100)
+
 	def clientUpdate(self, dt):
 		for x in range(self.map.blocks_horizontal):
 			for y in range(self.map.blocks_vertical):

@@ -8,7 +8,7 @@ class Interaction:
 	NoInteraction = 0
 	Destroy = 1
 	Create = 2
-        PickUp = 3
+	PickUp = 3
 
 class Direction:
 	NoDir = 0
@@ -33,6 +33,7 @@ class Player:
 		self.name = "unnamed"
 		self.visible = False
 		self.isDirty = False
+		self.targetposition = None
 		self.position = Vector(0,0)
 		self.velocity = Vector(0,0)
 		self.acceleration = Vector(0,0)
@@ -42,15 +43,15 @@ class Player:
 		self.currentInteraction = Interaction.NoInteraction
 		self.currentInteractionBlockType = None
 		self.carrying = None
-
+		self.voted_begin = False
         
         def getTargetPosition(self):
-	    direction = self.currentDirection
-	    if direction == Direction.NoDir:
-		direction = self.lastDirection
-	    dirvector = direction_vectors[direction]
-	    targetpos = self.position + Vector(16,16) + dirvector * 16
-	    return targetpos
+			direction = self.currentDirection
+			if direction == Direction.NoDir:
+				direction = self.lastDirection
+			dirvector = direction_vectors[direction]
+			targetpos = self.position + Vector(16,16) + dirvector * 16
+			return targetpos
 
 
 	def interact(self, interaction, setInteracting):
@@ -88,19 +89,18 @@ class Player:
 			pass
 
         def interaction_pickup_block(self, dt, block):
-                if self.carrying:
-                    if block.type == 0:
-                        block.type = self.carrying
-                        self.carrying = None
-                        block.isDirty = True
-                        self.isDirty = True
-                else:
-                    self.carrying = block.type
-                    block.type = 0
-                    block.isDirty = True
-                    self.isDirty = True
-                self.currentInteraction = Interaction.NoInteraction
-
+			if self.carrying:
+				if block.type == 0:
+					block.type = self.carrying
+					self.carrying = None
+					block.isDirty = True
+					self.isDirty = True
+			else:
+				self.carrying = block.type
+				block.type = 0
+				block.isDirty = True
+				self.isDirty = True
+			self.currentInteraction = Interaction.NoInteraction
 
 	def updateInteraction(self, dt, block):
 		if not block:
@@ -112,7 +112,7 @@ class Player:
 			
 			#if block.type == BlockType.Dirt:
 			self.interaction_destroy_dirt(dt, block)
-                if self.currentInteraction == Interaction.PickUp:
+                elif self.currentInteraction == Interaction.PickUp:
                         self.currentInteractionBlockType = block.type
                         self.interaction_pickup_block(dt, block)
 		else:
@@ -141,10 +141,18 @@ class Player:
 	def clientUpdate(self, dt):
 		self.update(dt)
 
+		if self.targetposition:
+			self.position += (self.targetposition - self.position) * dt
+
+	
+	# Get (left,top,right,bottom) bounding box
+	def boundingBox(self):
+		return (self.position.x, self.position.y, self.position.x+32, self.position.y+32)
 
 	def setUpdateData(self, data, packetTime):
 		self.name = data.name
 		self.visible = data.visible
+		self.targetposition = data.position + data.velocity * packetTime
 		self.velocity = data.velocity
 		self.acceleration = data.acceleration
 		self.movementAcceleration = data.movementAcceleration

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import socket, time
+import random
 from sys import exit
 from random import *
 from common.map import *
@@ -12,8 +13,11 @@ PORT = 12345
 UPDATE_INTERVALL = 1.0/30.0
 SEND_INTERVALL = 0.1
 
+# Game state
 mapname = "data/test.stl"
 mapdata = parse_map(open(mapname))
+state = "warmup"
+n_votebegin = 0
 
 class Client:
 	def __init__(self, conn, addr):
@@ -181,6 +185,8 @@ if __name__ == "__main__":
 		data = mapdata.serialize()
 		print "Sending map (%d bytes)" % len(data)
 		server.send(client, "mapdata " + data)
+		print "publising gamestate"
+		server.send(client, "state %s" % state)
 
 	def abort(client, args):
 		global server
@@ -189,6 +195,7 @@ if __name__ == "__main__":
 
 	def joined(client):
 		player = Player(str(client.id), randint(0,mapdata.width), randint(0,mapdata.height))
+		player.client = client
 		mapdata.addPlayer(player)
 		client.player = player
 
@@ -221,6 +228,36 @@ if __name__ == "__main__":
 	def player_command_create(client, doit):
 		client.player.interact(Interaction.Create, doit == "True")
 
+	def startround():
+		global server
+		# Decide which players are 'evil'
+		nice_players = list(mapdata.players.values())
+		n_evil = len(nice_players)/4
+		for i in range(n_evil):
+			s = random.randint(0, len(n_evil)-1)
+			evil = nice_players[s]
+			nice_players.remove[evil]
+			evil.evil = True
+
+			server.send(evil.client, "attitude evil")
+		for nice in nice_players:
+			server.send(nice.client, "attitude nice")
+		server.sendall("state game")
+		print "Round begins"
+		# TODO: start timer
+
+	def votebegin(client, text):
+		global n_votebegin
+		if client.player.voted_begin:
+			return
+		client.player.voted_begin = True
+		n_votebegin += 1
+
+		if n_votebegin == len(mapdata.players):
+			startround()
+		else:
+			server.sendall("voteresult %s/%s" % (n_votebegin, len(mapdata.players)))
+
 	def ping(client, number):
 		global server
 		server.send(client, "pong " + str(number))
@@ -239,6 +276,7 @@ if __name__ == "__main__":
 	server.player_command_pickup = player_command_pickup
 	server.player_command_create = player_command_create
 	server.ping = ping
+	server.votebegin = votebegin
 
 	t = time.clock()
 	lastUpdateTime = t

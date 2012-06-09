@@ -51,14 +51,6 @@ class PlayerVisualizer(Visualizer):
 			direction = obj.lastDirection
 		return direction2RoationMap[direction]
 
-	def getTargetOffset(self, obj):
-		direction = obj.currentDirection
-		if direction == Direction.NoDir:
-			direction = obj.lastDirection
-		dirvector = direction_vectors[direction]
-		targetpos = Vector(16,16) + dirvector * 16
-		return targetpos
-	
 	def draw(self, offset, obj):
 		if obj.visible:
 			direction = obj.currentDirection
@@ -68,7 +60,8 @@ class PlayerVisualizer(Visualizer):
 
 			self.graphics = self.spriteset.getWalkAnimationSprites(direction)
 
-			Visualizer.draw(self, offset, obj, rotation=0)#self.getDirectionRotation(obj))
+			# move player image...
+			Visualizer.draw(self, offset + Vector(16,0), obj, rotation=0)#self.getDirectionRotation(obj))
 
 			targetpos = obj.position + Vector(16,16) + dirvector * 16 + offset
 
