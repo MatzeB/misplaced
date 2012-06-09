@@ -33,7 +33,6 @@ class Player:
 		self.name = "unnamed"
 		self.visible = False
 		self.isDirty = False
-		self.targetposition = None
 		self.position = Vector(0,0)
 		self.velocity = Vector(0,0)
 		self.acceleration = Vector(0,0)
@@ -43,6 +42,16 @@ class Player:
 		self.currentInteraction = Interaction.NoInteraction
 		self.currentInteractionBlockType = None
 		self.carrying = None
+
+        
+        def getTargetPosition(self):
+	    direction = self.currentDirection
+	    if direction == Direction.NoDir:
+		drection = self.lastDirection
+	    dirvector = direction_vectors[direction]
+	    targetpos = self.position + Vector(16,16) + dirvector * 16
+	    return targetpos
+
 
 	def interact(self, interaction, setInteracting):
 		if setInteracting:
@@ -80,7 +89,6 @@ class Player:
 
         def interaction_pickup_block(self, dt, block):
                 if self.carrying:
-                    print block.type
                     if block.type == 0:
                         block.type = self.carrying
                         self.carrying = None
@@ -133,14 +141,10 @@ class Player:
 	def clientUpdate(self, dt):
 		self.update(dt)
 
-		if self.targetposition:
-			self.position += (self.targetposition - self.position) * dt
-
 
 	def setUpdateData(self, data, packetTime):
 		self.name = data.name
 		self.visible = data.visible
-		self.targetposition = data.position + data.velocity * packetTime
 		self.velocity = data.velocity
 		self.acceleration = data.acceleration
 		self.movementAcceleration = data.movementAcceleration
