@@ -7,6 +7,7 @@ from pygame.color import Color
 from libs import pygl2d
 
 from random import *
+from common.rules import *
 from common.map import *
 from common.vector import *
 from client.mapvisualizer import *
@@ -26,6 +27,7 @@ class Main:
 		self.showFPS = True
 
 		self.current_state = "warmup"
+		self.startTime = None
 
 		self.packetTime = 1/30.0
 		self.lastPingTime = time.clock()
@@ -51,6 +53,7 @@ class Main:
 		self.networkClient.pong = self.pong
 		self.networkClient.left = self.playerLeft
 		self.networkClient.state = self.state
+		self.networkClient.starttime = self.starttime
 
 		self.map = None
 
@@ -76,20 +79,26 @@ class Main:
 			self.map.setCurrentState(self.current_state)
 		self.updateStateText()
 	
+	def starttime(self, time):
+		self.startTime = float(time)
+	
 	def updateStateText(self):
 		text = ""
 		player = None
 		if self.map and self.map.map.players.has_key(self.playerid):
 			player = self.map.map.players[self.playerid]
-		if self.current_state == "warmup" and not player.voted_begin:
-			text += "Warmup, press F3 when ready!"
+		if self.current_state == "warmup":
+			if not player.voted_begin:
+				text += "Warmup, press F3 when ready!"
 		if self.map and self.map.map.players.has_key(self.playerid):
 			player = self.map.map.players[self.playerid]
 			if player.evil is not None:
 				if player.evil:
-					text += "You are evil."
+					text += "You are evil. "
 				else:
-					text += "You are nice."
+					text += "You are nice. "
+		if self.current_state == "game" and self.startTime:
+				text += "%.0fs left." % (ROUND_TIME + self.startTime - time.clock())
 		self.statetext.change_text(text)
 
 	def mapUpdate(self, strmapdata):

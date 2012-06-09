@@ -244,9 +244,11 @@ if __name__ == "__main__":
 		for nice in nice_players:
 			nice.evil = False
 			nice.isDirty = True
+
+		server.startTime = time.clock()
 		server.sendall("state game")
+		server.sendall("starttime %f" % server.startTime)
 		print "Round begins"
-		# TODO: start timer
 
 	def votebegin(client, text):
 		global n_votebegin
