@@ -112,7 +112,7 @@ class Player:
 			
 			#if block.type == BlockType.Dirt:
 			self.interaction_destroy_dirt(dt, block)
-                if self.currentInteraction == Interaction.PickUp:
+                elif self.currentInteraction == Interaction.PickUp:
                         self.currentInteractionBlockType = block.type
                         self.interaction_pickup_block(dt, block)
 		else:
