@@ -177,7 +177,7 @@ if __name__ == "__main__":
 	def sendgameupdate(server, deltatime):
 		mapupdate = mapdata.getMapUpdate(deltatime)
 
-		if mapupdate != None and mapupdate.hasData():
+		if mapupdate.hasData():
 			sendMapUpdate(mapupdate)
 
 	# ====================================================================================================
