@@ -213,17 +213,10 @@ if __name__ == "__main__":
 	def name(client, newname):
 		global server
 
-		print "%s changed name to %s" % (client, newname)
 		client.name = newname
 		client.player.name = newname
 		client.player.visible = True
-
-		server.send(client, "welcome " + str(client.player.id))
-		data = mapdata.serialize()
-		print "Sending map (%d bytes)" % len(data)
-		server.send(client, "mapdata " + data)
-		print "publising gamestate"
-		server.send(client, "state %s" % state)
+		client.player.isDirty = True
 
 	def abort(client, args):
 		global server
@@ -238,6 +231,14 @@ if __name__ == "__main__":
 		if state == "game":
 			player.evil = randint(0,2) == 0
 		client.player = player
+
+		server.send(client, "welcome " + str(client.player.id))
+		data = mapdata.serialize()
+		print "Sending map (%d bytes)" % len(data)
+		server.send(client, "mapdata " + data)
+		print "publising gamestate"
+		server.send(client, "state %s" % state)
+
 
 	def left(client):
 		global server
