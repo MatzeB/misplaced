@@ -149,8 +149,8 @@ if __name__ == "__main__":
 			print "You created the SOS, help will be here soon"
 			server.sendall("abort")
 
-	def sendgameupdate(server):
-		mapupdate = mapdata.getMapUpdate()
+	def sendgameupdate(server, deltatime):
+		mapupdate = mapdata.getMapUpdate(deltatime)
 
 		if mapupdate.hasData():
 			sendMapUpdate(mapupdate)
@@ -254,5 +254,5 @@ if __name__ == "__main__":
 
 		dt = t - lastSendTime
 		if dt > SEND_INTERVALL:
-			sendgameupdate(server)
+			sendgameupdate(server, t - lastUpdateTime)
 			lastSendTime = t

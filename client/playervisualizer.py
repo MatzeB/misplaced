@@ -1,3 +1,4 @@
+import time
 from libs import pygl2d
 from visualizer import *
 from blockvisualizer import *
@@ -38,7 +39,11 @@ class PlayerVisualizer(Visualizer):
 		return obj.position
 
 	def getGraphicsKey(self, obj):
-		return 0
+		#print len(self.graphics)
+		if obj.velocity.getLength() > 0:
+			return int(time.clock()*10%7+1)
+		else:
+			return 0
 
 	def getDirectionRotation(self, obj):
 		direction = obj.currentDirection

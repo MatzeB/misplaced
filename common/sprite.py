@@ -43,6 +43,7 @@ class PlayerSpriteSet:
 		self.sprites = sprites
 
 	def getWalkAnimationSprites(self, direction):
+		print len(self.sprites)
 		if direction == 0 or direction == 1:
 			return self.sprites[10:19]
 		elif direction == 2:

@@ -20,8 +20,8 @@ class Map:
 			self.blocks[x] = {}
 			self.background[x] = {}
 
-	def getMapUpdate(self):
-		mapupdate = MapUpdate()
+	def getMapUpdate(self, deltatime):
+		mapupdate = MapUpdate(deltatime=deltatime)
 
 		for x in range(self.blocks_horizontal):
 			for y in range(self.blocks_vertical):
@@ -101,14 +101,14 @@ class Map:
 
 	def incrementalUpdate(self, data, packetTime):
 		for block in data.blocks:
-			self.blocks[block.x][block.y].setUpdateData(block, packetTime)
+			self.blocks[block.x][block.y].setUpdateData(block, packetTime + data.deltatime)
 		
 		for block in data.background:
-			self.background[block.x][block.y].setUpdateData(block, packetTime)
+			self.background[block.x][block.y].setUpdateData(block, packetTime + data.deltatime)
 		
 		for player in data.players:
 			if self.players.has_key(player.id):
-				self.players[player.id].setUpdateData(player, packetTime)
+				self.players[player.id].setUpdateData(player, packetTime + data.deltatime)
 			else:
 				self.players[player.id] = player
 
@@ -190,16 +190,21 @@ class Map:
 					return True
 
 class MapUpdate:
-	def __init__(self, blocks=None, background=None, players=None):
+	def __init__(self, blocks=None, background=None, players=None, deltatime=0):
 		self.blocks = blocks or []
 		self.background = background or []
 		self.players = players or []
+		self.deltatime = deltatime
 
 	def hasData(self):
 		return len(self.players) > 0 or len(self.blocks) > 0 or len(self.background) > 0
 
 	def serialize(self):
 		result = "["
+
+		result += str(self.deltatime)
+
+		result += "|"
 		
 		for b in self.blocks:
 			result += b.serialize() + "/"
@@ -223,9 +228,10 @@ class MapUpdate:
 		result = MapUpdate()
 
 		parts = strdata[1:-1].split("|")
-		strblocks = parts[0].split("/")
-		strbackground = parts[1].split("/")
-		strplayers = parts[2].split("/")
+		result.deltatime = float(parts[0])
+		strblocks = parts[1].split("/")
+		strbackground = parts[2].split("/")
+		strplayers = parts[3].split("/")
 
 		for b in strblocks:
 			if len(b.strip()) > 0:
