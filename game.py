@@ -36,7 +36,7 @@ class Main:
 		self.playername = playername or "Player_" + str(int(100 * random()))
 		self.playerid = None
 		
-		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced")
+		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced", bg=(0.0, 0.0, 0.0, 0.0))
 
 		pygame.font.init()
 		fontname = pygame.font.get_default_font()
