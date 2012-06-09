@@ -43,6 +43,9 @@ class Vector:
 	def toInt(self): return Vector(int(self.x), int(self.y))
 	def toIntArr(self): return self.toInt().toArr()
 
+	def getAngle(self):
+		return atan2(self.x, self.y)
+
 	def getNormalized(self): 
 		if len(self) != 0:
 			return self / self.getLength()

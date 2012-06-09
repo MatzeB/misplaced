@@ -61,40 +61,27 @@ class PlayerVisualizer(Visualizer):
 		else:
 			return 0
 
-	def getDirection(self, obj):
-		direction = obj.currentDirection
-		if direction == Direction.NoDir:
-			direction = obj.lastDirection
-		return direction
-	
 	def getDirectionRotation(self, obj):
-		return direction2RoationMap[self.getDirection(obj)]
+		return direction2RoationMap[obj.getDirection()]
 
 	def draw(self, offset, obj):
 		if obj.visible:
-			direction = obj.currentDirection
-			if direction == Direction.NoDir:
-				direction = obj.lastDirection
-			dirvector = direction_vectors[direction]
-
 			if not obj.stunned:
-				self.graphics = self.spriteset.getWalkAnimationSprites(direction)
+				self.graphics = self.spriteset.getWalkAnimationSprites(obj.getDirection())
 			else:
 				self.graphics = self.spriteset.getStunnedSprites()
 
             # If the player moves up, draw carried things first
-			if self.getDirection(obj) == Direction.Up and obj.carrying:
+			if obj.getDirection() == Direction.Up and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 
 			Visualizer.draw(self, offset + Vector(0,-11.), obj, rotation=0)#self.getDirectionRotation(obj))
-
-			targetpos = obj.position + dirvector * 16 + offset
 
 			if DEBUG:
 				pygl2d.draw.circle(
 					(obj.getTargetPosition() + offset).toIntArr(),
 					8, (255,0,0), 100)
-			if self.getDirection(obj) != Direction.Up and obj.carrying:
+			if obj.getDirection() != Direction.Up and obj.carrying:
 				self.carriedblockvisualizer.draw(offset, obj, rotation=self.getDirectionRotation(obj))
 
 			self.drawName(offset, obj)

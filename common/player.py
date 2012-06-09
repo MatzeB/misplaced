@@ -37,10 +37,9 @@ class Player:
 		self.targetposition = None
 		self.position = Vector(96,96)
 		self.velocity = Vector(0,0)
+		self.oldAccel = Vector(0,0)
 		self.acceleration = Vector(0,0)
 		self.movementAcceleration = 100
-		self.lastDirection = Direction.Up
-		self.currentDirection = Direction.Up
 		self.currentInteraction = Interaction.NoInteraction
 		self.currentInteractionBlockType = None
 		self.carrying = None
@@ -54,12 +53,19 @@ class Player:
 		self.isDirty = True
         
 	def getTargetPosition(self):
-		direction = self.currentDirection
-		if direction == Direction.NoDir:
-			direction = self.lastDirection
-		dirvector = direction_vectors[direction]
-		targetpos = self.position + dirvector * 16.
+		targetpos = self.position + self.oldAccel.getNormalized() * 16.
 		return targetpos
+
+	# Just an approximation
+	def getDirection(self):
+		alpha = self.oldAccel.getAngle()
+		if -3*pi/4 <= alpha <= -pi/4:
+			return Direction.Left
+		if pi/4 <= alpha <= 3*pi/4:
+			return Direction.Right
+		if -pi/4 <= alpha <= pi/4:
+			return Direction.Down
+		return Direction.Up
 
 	def interact(self, interaction, setInteracting):
 		if not self.stunned and setInteracting:
@@ -75,13 +81,15 @@ class Player:
 
 	def move(self, direction, doMove):
 		if self.stunned:
-			self.acceleration = Vector(0,0)
+			if self.acceleration.getLength() > 0:
+				self.oldAccel = self.acceleration
+				self.acceleration = Vector(0,0)
 			return
 
 		if doMove:
 			accel = self.movementAcceleration
 		else:
-			accel = Vector(0., 0.)
+			accel = 0
 
 		if direction == Direction.Left or direction == Direction.Right:
 			self.acceleration.x = 0
@@ -90,14 +98,8 @@ class Player:
 			self.acceleration.y = 0
 
 		self.acceleration += direction_vectors[direction] * accel
-
-		if self.currentDirection == Direction.NoDir:
-			self.lastDirection = self.currentDirection
-			self.currentDirection = direction
-
-		if self.acceleration.getLength() == 0:
-			self.lastDirection = self.currentDirection
-			self.currentDirection = Direction.NoDir
+		if self.acceleration.getLength() > 0:
+			self.oldAccel = Vector(self.acceleration)
 
 		self.isDirty = True
 
@@ -213,8 +215,6 @@ class Player:
 		self.velocity = data.velocity
 		self.acceleration = data.acceleration
 		self.movementAcceleration = data.movementAcceleration
-		self.lastDirection = data.lastDirection
-		self.currentDirection = data.currentDirection
 		self.currentInteraction = data.currentInteraction
 		self.currentInteractionBlockType = data.currentInteractionBlockType
 		self.carrying = data.carrying
@@ -224,7 +224,7 @@ class Player:
 
 
 	def serialize(self):
-		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
 			self.id,
 			self.name,
 			self.visible,
@@ -232,8 +232,6 @@ class Player:
 			self.velocity.serialize(),
 			self.acceleration.serialize(),
 			self.movementAcceleration,
-			self.lastDirection,
-			self.currentDirection,
 			self.currentInteraction,
 			self.currentInteractionBlockType,
 			self.carrying,
@@ -257,16 +255,14 @@ class Player:
 		result.velocity = Vector.deserialize(parts[4])
 		result.acceleration = Vector.deserialize(parts[5])
 		result.movementAcceleration = float(parts[6])
-		result.lastDirection = int(parts[7])
-		result.currentDirection = int(parts[8])
-		result.currentInteraction = int(parts[9])
-		if parts[10] == "None": result.currentInteractionBlockType = None
-		else: result.currentInteractionBlockType = int(parts[10])
-		if parts[11] == "None": result.carrying = None
-		else: result.carrying = int(parts[11])
-		result.voted_begin = parts[12] == "True"
-		result.stunned = parts[13] == "True"
-		if parts[14] == "None": result.evil = None
-		else: result.evil = parts[14] == "True"
+		result.currentInteraction = int(parts[7])
+		if parts[8] == "None": result.currentInteractionBlockType = None
+		else: result.currentInteractionBlockType = int(parts[8])
+		if parts[9] == "None": result.carrying = None
+		else: result.carrying = int(parts[9])
+		result.voted_begin = parts[10] == "True"
+		result.stunned = parts[11] == "True"
+		if parts[12] == "None": result.evil = None
+		else: result.evil = parts[12] == "True"
 
 		return result
