@@ -1,13 +1,19 @@
 Hidden Agenda
 -------------
 
+Dies ist ein Vorschlag das Spiel abzuspecken, damit es fertig wird.
+
 Einige (Minderzahl) der Leute wollen gar nicht weg sondern auf der Insel bleiben
 und möglichst auch nicht dass jemand anderes flieht und die Position der Insel
 verrät.
 
-Holz ernten und Floß bauen, dazu muss man eine gewisse Menge Holz auf einen
-Haufen zusammentragen. Holz liegt auf der Insel verstreut herum. Interatkion
-Holz aufnehmen, Holz auf Haufen ablegen, Floß bauen.
+Zum Fliehen: Holz sammeln und ein SOS-Muser legen (das kann man dann anzünden wenn noch Zeit zum implementieren ist), der Hubschraubersuchtrupp sieht das dann.
+
+Zum Bleiben: Für eine gewisse Zeit verhindern, dass das SOS-Muster gelegt wird.
+Dann geben die Suchtrupps auf.
+
+PvP: Wenn man jemanden verdächtigt dass er sabotiert um zu bleiben, kann man ihn festhalten. Damit sind dann beide Spieler unfähig etwas zu tun...
+
 
 
 
