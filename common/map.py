@@ -57,6 +57,22 @@ class Map:
 
 		return result
 
+	def findPlayerAt(self, position, excluded=None):
+		minDist = 10000
+		result = None
+		for id, player in self.players.iteritems():
+			if player != excluded:
+				dist = Vector.distance(player.position + Vector(16,16), position)
+				if dist < minDist:
+					result = player
+					minDist = dist
+
+		print (minDist, result)
+		if minDist < 16: # Target needs to be that close
+			return result
+		else:
+			return None
+
 	def update(self, dt):
 		for x in range(self.blocks_horizontal):
 			for y in range(self.blocks_vertical):
