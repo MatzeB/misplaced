@@ -62,19 +62,17 @@ class MapVisualizer:
 					self.blockvisualizer.draw(self.currentOffset, solid_block)
 
 		for id,player in self.map.players.iteritems():
-			self.playervisualizer.draw(self.currentOffset, player)
-
 			# Debug highlighting
 			block = self.map.findNearestBlockAt(
 			                                    self.map.background,
 			                                    player.getTargetPosition())
-			if block != None and DEBUG:
+			if block != None:# and DEBUG:
 				pygl2d.draw.rect(
 								(block.x * self.blockvisualizer.blockWidth + self.currentOffset.x - TILE_WIDTH/2,
 				 block.y * self.blockvisualizer.blockHeight + self.currentOffset.y - TILE_HEIGHT/2,
 				 TILE_WIDTH,
 				 TILE_HEIGHT),
-				(255,0,0), alpha=100)
+				(255,255,255), alpha=100)
 
 			# Debug highlighting for collision bounding box
 			if DEBUG:
@@ -85,6 +83,8 @@ class MapVisualizer:
 					bbox[2]-bbox[0],
 					bbox[3]-bbox[1])
 				pygl2d.draw.rect(bbox, (0, 0, 255), alpha=100)
+				
+			self.playervisualizer.draw(self.currentOffset, player)
 
 	def clientUpdate(self, dt):
 		for x in range(self.map.blocks_horizontal):
