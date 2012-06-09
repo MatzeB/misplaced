@@ -257,9 +257,9 @@ if __name__ == "__main__":
 		nice_players = list(mapdata.players.values())
 		n_evil = len(nice_players)/3
 		for i in range(n_evil):
-			s = random.randint(0, len(n_evil)-1)
+			s = randint(0, len(nice_players)-1)
 			evil = nice_players[s]
-			nice_players.remove[evil]
+			nice_players.remove(evil)
 			evil.evil = True
 
 		for nice in nice_players:
