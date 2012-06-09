@@ -46,14 +46,6 @@ class PlayerVisualizer(Visualizer):
 			direction = obj.lastDirection
 		return direction2RoationMap[direction]
 
-	def getTargetOffset(self, obj):
-		direction = obj.currentDirection
-		if direction == Direction.NoDir:
-			direction = obj.lastDirection
-		dirvector = direction_vectors[direction]
-		targetpos = Vector(16,16) + dirvector * 16
-		return targetpos
-	
 	def draw(self, offset, obj):
 		if obj.visible:
 			direction = obj.currentDirection

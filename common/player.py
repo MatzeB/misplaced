@@ -45,12 +45,12 @@ class Player:
 		self.voted_begin = False
         
         def getTargetPosition(self):
-	    direction = self.currentDirection
-	    if direction == Direction.NoDir:
-		direction = self.lastDirection
-	    dirvector = direction_vectors[direction]
-	    targetpos = self.position + Vector(16,16) + dirvector * 16
-	    return targetpos
+			direction = self.currentDirection
+			if direction == Direction.NoDir:
+				direction = self.lastDirection
+			dirvector = direction_vectors[direction]
+			targetpos = self.position + Vector(16,16) + dirvector * 16
+			return targetpos
 
 
 	def interact(self, interaction, setInteracting):
