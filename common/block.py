@@ -1,4 +1,5 @@
 from common.vector import *
+from direction import *
 
 class BlockType:
 	Dirt = 0
@@ -13,6 +14,7 @@ class Block:
 		self.type = t
 		self.isInteracting = False
 		self.isBackground = False
+		self.direction = Direction.Up
 
 		# server properties
 		self.isDirty = False
@@ -40,14 +42,16 @@ class Block:
 		self.type = data.type
 		self.isInteracting = data.isInteracting
 		self.isBackground = data.isBackground
+		self.direction = data.direction
 
 	def serialize(self):
-		result = "[%s,%s,%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s,%s]" % (
 			self.x,
 			self.y,
 			self.type,
 			self.isInteracting,
-			self.isBackground
+			self.isBackground,
+			self.direction
 		)
 
 		return result
@@ -63,4 +67,6 @@ class Block:
 		result = Block(int(parts[0]), int(parts[1]), int(parts[2]))
 		result.isInteracting = parts[3] == "True"
 		result.isBackground = parts[4] == "True"
+		result.direction = int(parts[5])
+
 		return result
