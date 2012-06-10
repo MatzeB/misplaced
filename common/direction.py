@@ -7,6 +7,9 @@ class Direction:
 	Up = 3
 	Down = 4
 
+def randomDirection():
+	return randint(Direction.Left, Direction.Down)
+
 direction_vectors = [
 	Vector( 0, 0),
 	Vector(-1, 0),
