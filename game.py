@@ -19,11 +19,11 @@ from libs.pygl2d.font import RenderText
 from debug import DEBUG
 
 PING_INTERVALL = 3.0
-FREQ = 44100   # changed
-BITSIZE = -16  # changed
-CHANNELS = 2   # changed
-BUFFER = 1024  # changed
-FRAMERATE = 30 # changed
+FREQ = 44100
+BITSIZE = -16
+CHANNELS = 2
+BUFFER = 1024
+FRAMERATE = 30
 
 class Main:
 	def __init__(self, playername, hostname):
@@ -245,15 +245,15 @@ class Main:
 	
 	def playMusic(self):
 		if not pygame.mixer.music.get_busy():
-			#Sounds.music.play()
+			Sounds.music.play()
 			pass
 	
 	def initSound(self):
-		try: #changed
-			pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)#changed
-		except pygame.error, exc:#changed
-			print >>sys.stderr, "Could not initialize sound system: %s" % exc#changed
-			return 1#changed
+		try:
+			pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
+		except pygame.error, exc:
+			print >>sys.stderr, "Could not initialize sound system: %s" % exc
+			return 1
 		Sounds.attack = pygame.mixer.Sound(Sounds.attackPath)
 		Sounds.setBlock = pygame.mixer.Sound(Sounds.setBlockPath)
 		Sounds.hit = pygame.mixer.Sound(Sounds.hitPath)
