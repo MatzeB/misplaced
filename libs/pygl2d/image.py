@@ -169,7 +169,7 @@ class Image:
     def draw(self, pos, rotation=None):
         """Draw the image to a certain position <- return None
         """
-        if not rotation: rotation = self.rotation
+        if rotation is None: rotation = self.rotation
 
         glPushMatrix()
         glTranslatef(pos[0]+self.ox, pos[1] - self.oy, 0)

@@ -11,10 +11,10 @@ def randomDirection():
 	return randint(Direction.Up, Direction.Right)
 
 def directonToRotation(dir):
-	if dir == Direction.Up:
+	if dir == Direction.NoDir:
 		return 0
 	else:
-		return (dir - 1) * 90
+		return (dir - 1) * -90
 
 def addDirection(dir1, dir2):
 	return ((dir1 - 1) + (dir2 - 1)) % 4 +1
@@ -22,10 +22,10 @@ def addDirection(dir1, dir2):
 def subDirection(dir1, dir2):
 	return ((dir1 - 1) - (dir2 - 1)) % 4 +1
 
-direction_vectors = [
-	Vector( 0, 0),
-	Vector( 0, -1),
-	Vector(-1, 0),
-	Vector( 0,  1),
-	Vector( 1, 0),
-]
+direction_vectors = {
+	Direction.NoDir: Vector( 0, 0),
+	Direction.Up: Vector( 0, -1),
+	Direction.Left: Vector(-1, 0),
+	Direction.Down: Vector( 0,  1),
+	Direction.Right: Vector( 1, 0),
+}

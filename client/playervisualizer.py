@@ -9,14 +9,6 @@ from pygame.color import Color
 from math import *
 from debug import DEBUG
 
-direction2RoationMap = {
-	Direction.NoDir: 0,
-	Direction.Left: 90,
-	Direction.Right: 270,
-	Direction.Up: 180,
-	Direction.Down: 0
-}
-
 class CarriedBlock(BlockVisualizer):
 	def __init__(self, tileset):
 		BlockVisualizer.__init__(self, tileset)
@@ -65,7 +57,7 @@ class PlayerVisualizer(Visualizer):
 			return 0
 
 	def getDirectionRotation(self, obj):
-		return direction2RoationMap[obj.getDirection()]
+		return directonToRotation(obj.getDirection())
 
 	def draw(self, offset, obj):
 		if obj.visible:
