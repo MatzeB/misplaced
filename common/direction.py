@@ -16,6 +16,12 @@ def directonToRotation(dir):
 	else:
 		return (dir - 1) * 90
 
+def addDirection(dir1, dir2):
+	return ((dir1 - 1) + (dir2 - 1)) % 4 +1
+
+def subDirection(dir1, dir2):
+	return ((dir1 - 1) - (dir2 - 1)) % 4 +1
+
 direction_vectors = [
 	Vector( 0, 0),
 	Vector( 0, -1),

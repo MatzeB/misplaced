@@ -25,7 +25,7 @@ class CarriedBlock(BlockVisualizer):
 		return obj.getTargetPosition()
 
 	def getRotation(self,obj):
-		return Direction.Up
+		return directonToRotation(obj.carryingDirection)
 
 	def getGraphicsKey(self, obj):
 		return obj.carrying

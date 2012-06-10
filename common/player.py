@@ -34,6 +34,7 @@ class Player:
 		self.currentInteraction = Interaction.NoInteraction
 		self.currentInteractionBlockType = None
 		self.carrying = None
+		self.carryingDirection = Direction.Up
 		self.voted_begin = False
 		self.stunned = False
 		self.stunTimer = None
@@ -121,11 +122,13 @@ class Player:
 		if self.carrying:
 			if block.type == 0:
 				block.type = self.carrying
+				block.direction = addDirection(self.carryingDirection, self.getDirection())
 				self.carrying = None
 				block.isDirty = True
 				self.isDirty = True
 		else:
 			self.carrying = block.type
+			self.carryingDirection = subDirection(block.direction, self.getDirection())
 			block.type = 0
 			block.isDirty = True
 			self.isDirty = True
@@ -232,6 +235,7 @@ class Player:
 		self.currentInteraction = data.currentInteraction
 		self.currentInteractionBlockType = data.currentInteractionBlockType
 		self.carrying = data.carrying
+		self.carryingDirection = data.carryingDirection
 		self.voted_begin = data.voted_begin
 		self.stunned = data.stunned
 		self.evil = data.evil
@@ -243,7 +247,7 @@ class Player:
 		self.nametext.change_text(text)
 
 	def serialize(self):
-		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
+		result = "[%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s]" % (
 			self.id,
 			self.name,
 			self.visible,
@@ -255,6 +259,7 @@ class Player:
 			self.currentInteraction,
 			self.currentInteractionBlockType,
 			self.carrying,
+			self.carryingDirection,
 			self.voted_begin,
 			self.stunned,
 			self.evil
@@ -283,6 +288,7 @@ class Player:
 		part = parts.pop(0)
 		if part == "None": result.carrying = None
 		else: result.carrying = int(part)
+		result.carryingDirection = int(parts.pop(0))
 		result.voted_begin = parts.pop(0) == "True"
 		result.stunned = parts.pop(0) == "True"
 		part = parts.pop(0)
