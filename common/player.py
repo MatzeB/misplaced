@@ -1,6 +1,7 @@
 import time
 from rules import *
 from vector import *
+from direction import *
 from block import BlockType
 from client.soundconstants import Sounds
 from libs.pygl2d.font import RenderText
@@ -15,21 +16,6 @@ class Interaction:
 	Destroy = 1
 	Create = 2
 	PickUp = 3
-
-class Direction:
-	NoDir = 0
-	Left = 1
-	Right = 2
-	Up = 3
-	Down = 4
-
-direction_vectors = [
-	Vector( 0, 0),
-	Vector(-1, 0),
-	Vector( 1, 0),
-	Vector( 0, -1),
-	Vector( 0,  1),
-]
 
 class Player:
 
