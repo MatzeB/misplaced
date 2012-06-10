@@ -8,6 +8,10 @@ This is an entry to the GulaschProgrammierNacht 2012 GameJam - a game
 programming competition in which you have 48 hours to create a game for a given
 topic.
 
+Screenshot
+----------
+![A Screenshot](https://entropia.de/wiki/images/e/e6/Screenshot.png)
+
 Story
 -----
 It's a cooperative multiplayer game: A bunch of people is stranded on an island and wants to attract the search crews by creating a big SOS-sign. However not everyone cooperates, some people decided that they would rather stay on the island and enjoy the sun and the coconuts without it being found.
