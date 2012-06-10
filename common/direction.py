@@ -8,7 +8,7 @@ class Direction:
 	Right = 4
 
 def randomDirection():
-	return randint(Direction.Left, Direction.Down)
+	return randint(Direction.Up, Direction.Right)
 
 def directonToRotation(dir):
 	if dir == Direction.Up:
