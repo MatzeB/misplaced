@@ -9,6 +9,7 @@ class Tile:
 		self.bottom = bottom
 		self.color = (255.0,255.0,255.0)
 		self.solid = False
+		self.rotateable = False
 		self.scale = 1.0
 
 	def colorize(self, r, g, b):
@@ -43,6 +44,9 @@ class TileSet:
 			44, 45, 46,
 			# TODO add more tiles as solid...
 		]
+		rotateable_tiles = [
+			self.wood
+		]
 
 		for s in range(4):
 			for y in range(n_vertical):
@@ -52,6 +56,8 @@ class TileSet:
 						tiles.append(tile)
 		for s in solid_tiles:
 			tiles[s].solid = True
+		for s in rotateable_tiles:
+			tiles[s].rotateable = True
 		self.tiles = tiles
 
 	def __len__(self):

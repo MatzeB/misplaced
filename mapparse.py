@@ -2,6 +2,7 @@ import re
 import sys
 from common.map import Map
 from common.tileset import TileSet
+from common.direction import *
 
 def ident(scanner, token): return token
 def number(scanner, token):
@@ -107,6 +108,8 @@ def parse_map(input):
 				for y in range(height):
 					for x in range(width):
 						dest[x][y].type = tiles[y*width+x]
+						if map.tileset.tiles[dest[x][y].type].rotateable:
+							dest[x][y].direction = randomDirection()
 
 			else:
 				next_token()

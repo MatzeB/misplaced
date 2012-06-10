@@ -1,4 +1,5 @@
 from libs.pygl2d.image import Image
+from common.direction import *
 
 class PlayerSprite:
 	def __init__(self, image, (left, top, right, bottom)):
@@ -46,13 +47,13 @@ class PlayerSpriteSet:
 		return self.sprites[36:43]
 
 	def getWalkAnimationSprites(self, direction):
-		if direction == 0 or direction == 1:
+		if direction == Direction.NoDir or direction == Direction.Left:
 			return self.sprites[9:18]
-		elif direction == 2:
+		elif direction == Direction.Right:
 			return self.sprites[27:36]
-		elif direction == 3:
+		elif direction == Direction.Up:
 			return self.sprites[0:9]
-		elif direction == 4:
+		elif direction == Direction.Down:
 			return self.sprites[18:27]
 
 	def __len__(self):

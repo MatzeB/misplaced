@@ -14,7 +14,7 @@ class Block:
 		self.type = t
 		self.isInteracting = False
 		self.isBackground = False
-		self.direction = randomDirection()
+		self.direction = Direction.Up
 
 		# server properties
 		self.isDirty = False

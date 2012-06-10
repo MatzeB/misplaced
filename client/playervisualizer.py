@@ -4,6 +4,7 @@ from libs.pygl2d.font import RenderText
 from visualizer import *
 from blockvisualizer import *
 from common.player import *
+from common.direction import *
 from pygame.color import Color
 from math import *
 from debug import DEBUG
@@ -17,17 +18,20 @@ direction2RoationMap = {
 }
 
 class CarriedBlock(BlockVisualizer):
-    def __init__(self, tileset):
-        BlockVisualizer.__init__(self, tileset)
-    
-    def getPosition(self, obj):
-        return obj.getTargetPosition()
+	def __init__(self, tileset):
+		BlockVisualizer.__init__(self, tileset)
+	
+	def getPosition(self, obj):
+		return obj.getTargetPosition()
 
-    def getGraphicsKey(self, obj):
-        return obj.carrying
+	def getRotation(self,obj):
+		return Direction.Up
 
-    def getGraphic(self, obj):
-        return Visualizer.getGraphic(self, obj)
+	def getGraphicsKey(self, obj):
+		return obj.carrying
+
+	def getGraphic(self, obj):
+		return Visualizer.getGraphic(self, obj)
 
 
 class PlayerVisualizer(Visualizer):

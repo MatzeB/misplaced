@@ -1,5 +1,6 @@
 from visualizer import *
 from math import *
+from common.direction import *
 
 class BlockVisualizer(Visualizer):
 
@@ -18,6 +19,9 @@ class BlockVisualizer(Visualizer):
 	def getGraphicsKey(self, obj):
 		return obj.type
 
+	def getRotation(self,obj):
+		return directonToRotation(obj.direction)
+
 	def clientUpdate(self, dt, obj):
 		Visualizer.clientUpdate(self, dt, obj)
 
@@ -28,7 +32,8 @@ class BlockVisualizer(Visualizer):
 			obj.interactionIndex = 0
 
 	def draw(self, offset, obj, rotation=0):
-		Visualizer.draw(self, offset, obj, rotation)
+		rot = rotation + self.getRotation(obj)
+		Visualizer.draw(self, offset, obj, rot)
 
 	def getGraphic(self, obj):
 		result = Visualizer.getGraphic(self, obj)
