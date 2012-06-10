@@ -4,9 +4,11 @@ Misplaced
 About
 -----
 
-This is an entry to the GulaschProgrammierNacht 2012 GameJam - a game
+This is an entry to the GulaschProgrammierNacht 2012 [GameJam][] - a game
 programming competition in which you have 48 hours to create a game for a given
 topic.
+
+[GameJam]: https://entropia.de/GPN12:Gamejam "The GPN12 Gamejam"
 
 Screenshot
 ----------
