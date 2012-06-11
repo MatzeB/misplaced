@@ -316,7 +316,7 @@ class Main:
 			self.update(dt)
 			self.draw()
 
-			if (time.time() - self.lastPongTime) > PING_INTERVALL:
+			if (time.time() - self.lastPingTime) > PING_INTERVALL:
 				self.sendPing()
 
 			if not self.networkClient.connected:
