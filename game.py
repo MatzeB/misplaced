@@ -24,6 +24,7 @@ BITSIZE = -16
 CHANNELS = 2
 BUFFER = 1024
 FRAMERATE = 30
+FULLSCREEN = False
 
 class Main:
 	def __init__(self, playername, hostname):
@@ -43,8 +44,11 @@ class Main:
 
 		self.playername = playername or "Player_" + str(int(100 * random()))
 		self.playerid = None
-		
-		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced", bg=(21.0/255.0, 108.0/255.0, 153.0/255.0, 1.0))
+	
+		flags = pygame.DOUBLEBUF | pygame.OPENGL
+		if FULLSCREEN:
+			flags |= pygame.FULLSCREEN
+		pygl2d.window.init(self.screenDim.toIntArr(), caption="Misplaced", bg=(21.0/255.0, 108.0/255.0, 153.0/255.0, 1.0), flags=flags)
 
 		pygame.font.init()
 		fontname = pygame.font.get_default_font()
@@ -320,9 +324,13 @@ class Main:
 
 if __name__ == '__main__':
 	playername = None
-	if "-debug" in sys.argv:
+	if "--debug" in sys.argv:
 		DEBUG=True
-		sys.argv.remove("-debug")
+		sys.argv.remove("--debug")
+
+	if "--fullscreen" in sys.argv:
+		FULLSCREEN=True
+		sys.argv.remove("--fullscreen")
 
 	if len(sys.argv) > 1:
 		playername = sys.argv[1]
