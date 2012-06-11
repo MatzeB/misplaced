@@ -8,7 +8,7 @@ from OpenGL.GLU import *
 import pygame
 from pygame.locals import *
 
-import rect, window
+import window
 from math import *
 
 WRAP = 0
