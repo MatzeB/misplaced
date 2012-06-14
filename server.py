@@ -9,6 +9,11 @@ from common.rules import *
 from mapparse import parse_map
 import sys
 
+if sys.platform == 'win32':
+	from errno import WSAEWOULDBLOCK as EWOULDBLOCK
+else:
+	from errno import EWOULDBLOCK
+
 HOST = ''
 PORT = 12345
 
@@ -43,9 +48,7 @@ def my_sendall(s, data):
 		try:
 			lsent = s.send(data[sent:])
 		except socket.error as e:
-			if e.errno == 10054:
-				raise RuntimeError("client dropped")
-			elif e.errno == 35 or e.errno == 10035:
+			if e.errno == EWOULDBLOCK:
 				continue
 			raise e
 		
@@ -87,8 +90,8 @@ class Server:
 			return
 		try:
 			fine = my_sendall(client.conn, text + "\n")
-		except:
-			print "Send to client %s failed, dropping" % client
+		except Exception as e:
+			print "Send to client %s failed (%s), dropping" % (client, e)
 			self._drop_client(client)
 
 	def _drop_client(self, client):
