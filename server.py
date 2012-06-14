@@ -235,13 +235,12 @@ if __name__ == "__main__":
 			player.evil = randint(0,2) == 0
 		client.player = player
 
-		server.send(client, "welcome " + str(client.player.id))
 		data = mapdata.serialize()
 		print "Sending map (%d bytes)" % len(data)
 		server.send(client, "mapdata " + data)
 		print "publising gamestate"
 		server.send(client, "state %s" % state)
-
+		server.send(client, "welcome " + str(client.player.id))
 
 	def left(client):
 		global server

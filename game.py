@@ -93,6 +93,8 @@ class Main:
 
 	def welcomeMessage(self, id):
 		self.playerid = id
+		if self.map != None:
+			self.map.playerid = id
 
 	def state(self, newstate):
 		self.current_state = newstate
@@ -321,7 +323,7 @@ class Main:
 			self.update(dt)
 			self.draw()
 
-			if (time.time() - self.lastPingTime) > PING_INTERVALL:
+			if self.playerid != None and (time.time() - self.lastPingTime) > PING_INTERVALL:
 				self.sendPing()
 
 			if not self.networkClient.connected:
