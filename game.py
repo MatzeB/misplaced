@@ -25,6 +25,7 @@ CHANNELS = 2
 BUFFER = 1024
 FRAMERATE = 30
 FULLSCREEN = False
+SOUND = False
 
 class Main:
 	def __init__(self, playername, hostname):
@@ -248,6 +249,9 @@ class Main:
 	# ====================================================================================================
 	
 	def playMusic(self):
+		if not SOUND:
+			return
+
 		if not pygame.mixer.music.get_busy():
 			Sounds.music.play()
 			pass
@@ -255,14 +259,15 @@ class Main:
 	def initSound(self):
 		try:
 			pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
+			Sounds.attack = pygame.mixer.Sound(Sounds.attackPath)
+			Sounds.setBlock = pygame.mixer.Sound(Sounds.setBlockPath)
+			Sounds.hit = pygame.mixer.Sound(Sounds.hitPath)
+			Sounds.getBlock = pygame.mixer.Sound(Sounds.getBlockPath)
+			Sounds.music = pygame.mixer.Sound(Sounds.musicPath)
+			SOUND = True
 		except pygame.error, exc:
 			print >>sys.stderr, "Could not initialize sound system: %s" % exc
 			return 1
-		Sounds.attack = pygame.mixer.Sound(Sounds.attackPath)
-		Sounds.setBlock = pygame.mixer.Sound(Sounds.setBlockPath)
-		Sounds.hit = pygame.mixer.Sound(Sounds.hitPath)
-		Sounds.getBlock = pygame.mixer.Sound(Sounds.getBlockPath)
-		Sounds.music = pygame.mixer.Sound(Sounds.musicPath)
 	# ====================================================================================================
 	# =======================           Game Loop                    =====================================
 	# ====================================================================================================
