@@ -46,7 +46,7 @@ class MapVisualizer:
 				background_block = self.map.background[x][y]
 				if background_block.type != 0:
 					self.blockvisualizer.draw(self.currentOffset, background_block)
-					if self.tileset[background_block.type].solid and DEBUG:
+					if DEBUG and self.tileset[background_block.type].solid:
 						bbox = background_block.boundingBox()
 						bbox = (bbox[0] + self.currentOffset.x,
 							bbox[1] + self.currentOffset.y,

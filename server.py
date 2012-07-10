@@ -60,6 +60,7 @@ class Server:
 	def __init__(self):
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 		self.s.bind((HOST, PORT))
 		self.s.listen(1)
 		self.s.setblocking(0)
@@ -107,6 +108,7 @@ class Server:
 			if newclient != None:
 				(conn, addr) = newclient
 				conn.setblocking(0)
+				conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 				print "Connect by ", addr
 				client = Client(conn, addr)
 				client.id = str(len(self.clients))

@@ -14,6 +14,7 @@ class Client:
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.s.connect((server, PORT))
 		self.s.setblocking(0)
+		self.s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
 	def say(self, text):
 		print text
